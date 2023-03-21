@@ -2,7 +2,7 @@
 	<nav class="fixed-top">
 		<Menubar :model="items" class="p-menubar">
 			<template #start>
-				<img alt="logo" src="/bflo-blue.png" height="40" /> </template
+				<img alt="logo" src="/bflo_blue.png" height="40" /> </template
 		></Menubar>
 	</nav>
 </template>
