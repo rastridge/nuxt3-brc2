@@ -64,17 +64,17 @@
 							body: formData,
 						}) */
 
-				/* 					const res = await fetch(
-						`https://media.my-test-site.net/images/upload`,
-						{
-							method: 'POST',
-							body: formData,
-							headers: {
-								authorization: auth.user.token,
-							},
-						}
-					) */
-
+				const res = await fetch(
+					`https://media.my-test-site.net/images/upload`,
+					{
+						method: 'POST',
+						body: formData,
+						headers: {
+							authorization: auth.user.token,
+						},
+					}
+				)
+				/* 	
 				const res = await fetch(`/images/upload`, {
 					method: 'POST',
 					body: formData,
@@ -82,7 +82,7 @@
 						authorization: auth.user.token,
 					},
 				})
-
+*/
 				const data = await res.json()
 				return data.imageurl
 			},
