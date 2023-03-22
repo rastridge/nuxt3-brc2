@@ -122,6 +122,7 @@
 	state.value.newsletter_recipient_type_id = 9
 	state.value.newsletter_id = ''
 	state.value.newsletter_body_html = ''
+	state.value.newsletter_body_text = ''
 	state.value.newsletter_subject = ''
 	state.value.admin_user_id = auth.user.admin_user_id
 
