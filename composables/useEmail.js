@@ -1,20 +1,17 @@
-// import querystring from 'querystring'
-// import https from 'https'
 const { EE_API_KEY } = useRuntimeConfig()
+import querystring from 'querystring'
+import https from 'https'
 
 export default function useEmail() {
-	const name = ref('joseph')
-
-	const sendByElasticEmail = function (email) {
+	function sendByElasticEmail(email_data) {
 		const post_data = querystring.stringify({
 			api_key: EE_API_KEY,
-			subject: email.subject,
-			from: email.from,
-			from_name: email.from_name,
-			to: email.to,
-			// to: "rfa@me.com",
-			body_html: email.body_html,
-			body_text: email.body_text,
+			subject: email_data.subject,
+			from: email_data.from,
+			from_name: email_data.from_name,
+			to: email_data.to,
+			body_html: email_data.body_html,
+			body_text: email_data.body_text,
 			isTransactional: true,
 		})
 
@@ -43,9 +40,9 @@ export default function useEmail() {
 
 		post_req.write(post_data)
 		post_req.end()
+		return statusCode
 	}
 	return {
-		name,
 		sendByElasticEmail,
 	}
 }

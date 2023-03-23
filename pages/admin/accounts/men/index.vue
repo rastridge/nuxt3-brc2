@@ -36,7 +36,7 @@
 	//
 	// Initialize values for Renderlist
 	//
-	const { getAccess } = useRenderListAccess()
+	const { getAccess } = useRenderListAcces()
 	const app = 'accounts/men'
 	const { editable, addable, deleteable, statusable, viewable } = getAccess(app)
 

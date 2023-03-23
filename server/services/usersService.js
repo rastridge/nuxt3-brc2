@@ -1,7 +1,9 @@
 ﻿import mysql from 'mysql2/promise'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-
+const { EE_API_KEY } = useRuntimeConfig()
+import querystring from 'querystring'
+import https from 'https'
 const config = useRuntimeConfig()
 
 async function doDBQuery(sql, inserts) {
@@ -40,7 +42,6 @@ export const usersService = {
 /*              _setPerms                  */
 /*                                         */
 /***************************************** */
-
 async function _setPerms(aPerms, id) {
 	const sql = `DELETE
             FROM
@@ -70,7 +71,6 @@ async function _setPerms(aPerms, id) {
 	}
 	return true
 }
-
 /***************************************** */
 /*              _getPerms                  */
 /***************************************** */
@@ -92,7 +92,6 @@ async function _getPerms(id) {
 
 	return perms
 }
-
 /***************************************** */
 /*              authenicate                */
 /***************************************** */
@@ -162,7 +161,6 @@ async function getAll() {
 
 	return users
 }
-
 /***************************************** */
 /*              getOne                     */
 /***************************************** */
@@ -189,7 +187,6 @@ async function deleteOne(id) {
 
 	return user
 }
-
 /***************************************** */
 /*              addOne                     */
 /***************************************** */
@@ -328,7 +325,6 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 		console.log('userservice addOne ROLLBACK')
 	}
 }
-
 /***************************************** */
 /*              editOne                    */
 /***************************************** */
@@ -489,12 +485,10 @@ async function editOne(info) {
 		console.log('userservice editOne ROLLBACK ')
 	}
 }
-
 /***************************************** */
 /*              changeStatus               */
 /*                                         */
 /***************************************** */
-
 async function changeStatus({ id, status }) {
 	const sql =
 		`UPDATE inbrc_admin_users SET STATUS = "` +
@@ -505,7 +499,10 @@ async function changeStatus({ id, status }) {
 
 	return user
 }
-
+/***************************************** */
+/*              getApps                    */
+/*                                         */
+/***************************************** */
 async function getApps() {
 	const sql = `SELECT
                     admin_app_id,
@@ -520,7 +517,10 @@ async function getApps() {
 
 	return apps
 }
-
+/***************************************** */
+/*              initPerms                  */
+/*                                         */
+/***************************************** */
 async function initPerms() {
 	const sql = `SELECT
 								admin_app_id,
@@ -533,6 +533,10 @@ async function initPerms() {
 
 	return perms
 }
+/***************************************** */
+/*              getAppPerms                */
+/*                                         */
+/***************************************** */
 async function getAppPerms() {
 	const sql = `SELECT
 								admin_perm,
@@ -551,8 +555,12 @@ async function getAppPerms() {
 
 	return perms
 }
-
+/***************************************** */
+/*              resetRequest               */
+/*                                         */
+/***************************************** */
 async function resetRequest({ username }) {
+	// Find out if matching username exists
 	const sql = `SELECT
 								COUNT(*) as cnt,
 								admin_user_email
@@ -564,26 +572,68 @@ async function resetRequest({ username }) {
 	const rows = await doDBQuery(sql)
 	const cnt = rows[0].cnt
 	const admin_user_email = rows[0].admin_user_email
+	// if username exists
 	if (cnt) {
-		const msg =
-			'To reset your password ' +
-			admin_user_email +
-			` go to  <a href="/reset/` +
+		/* const msg =
+			'To reset your user admin password <a href="http://localhost:3000/reset/' +
 			username +
-			'">RESET PASSWORD</a>'
+			'">Click here</a>' */
+		const msg =
+			'To reset your user admin password <a href="https://lustrous-halva-085afc.netlify.app//reset/' +
+			username +
+			'">Click here</a>'
 
 		const email_data = {
 			from: config.FROM,
 			fromName: config.FROM_NAME,
 			to: admin_user_email,
-			subject: 'BRC Member Account Modification',
+			subject: 'BRC Admin User Password Reset',
 			body_text: '',
 			body_html: '<h3>' + msg + '</h3>',
 		}
-		console.log(email_data)
-		// sendEmail(email)
-	}
+		// helper
+		const sendEmail = (email) => {
+			const post_data = querystring.stringify({
+				api_key: EE_API_KEY,
+				subject: email.subject,
+				from: email.from,
+				from_name: email.from_name,
+				to: email.to,
+				// to: "rfa@me.com",
+				body_html: email.body_html,
+				body_text: email.body_text,
+				isTransactional: true,
+			})
+			const post_options = {
+				hostname: 'api.elasticemail.com',
+				path: '/v2/email/send',
+				port: '443',
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Content-Length': post_data.length,
+				},
+			}
 
+			let result = ''
+			const post_req = https.request(post_options, function (res) {
+				res.setEncoding('utf8')
+				res.on('data', function (chunk) {
+					result = chunk
+					const { statusCode, statusMessage, headers } = res
+				})
+				res.on('error', function (e) {
+					result = 'Error: ' + e.message
+				})
+			})
+
+			post_req.write(post_data)
+			post_req.end()
+
+			// console.log(' IN sendMail end ')
+		}
+		sendEmail(email_data)
+	}
 	return username
 }
 
@@ -610,8 +660,45 @@ async function resetPassword({ username, password }) {
 		body_text: '',
 		body_html: `<h3>The password has been changed for ${username}. The new password is "${password}"</h3>`,
 	}
-	console.log('email_data = ', email_data)
-	// sendEmail(email)
+	// helper
+	const sendEmail = (email) => {
+		const post_data = querystring.stringify({
+			api_key: EE_API_KEY,
+			subject: email.subject,
+			from: email.from,
+			from_name: email.from_name,
+			to: email.to,
+			// to: "rfa@me.com",
+			body_html: email.body_html,
+			body_text: email.body_text,
+			isTransactional: true,
+		})
+		const post_options = {
+			hostname: 'api.elasticemail.com',
+			path: '/v2/email/send',
+			port: '443',
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Length': post_data.length,
+			},
+		}
 
+		let result = ''
+		const post_req = https.request(post_options, function (res) {
+			res.setEncoding('utf8')
+			res.on('data', function (chunk) {
+				result = chunk
+				const { statusCode, statusMessage, headers } = res
+			})
+			res.on('error', function (e) {
+				result = 'Error: ' + e.message
+			})
+		})
+
+		post_req.write(post_data)
+		post_req.end()
+	}
+	sendEmail(email_data)
 	return result
 }

@@ -1,5 +1,4 @@
 export * from './accounts.service'
-export * from './user.service'
 /* export * from './contribution.service'
 export * from './newsletter.service'
 export * from './news.service'

@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise'
 import querystring from 'querystring'
 import https from 'https'
+// const { sendByElasticEmail } = useEmail()
 
 const {
 	DB_DATABASE,
@@ -308,7 +309,7 @@ async function sendNewsletter({
 		return email
 	}
 
-	const { sendByElasticEmail } = useEmail()
+	// const { sendByElasticEmail } = useEmail()
 	/* 
 	const sendEmail = (email) => {
 		const post_data = querystring.stringify({

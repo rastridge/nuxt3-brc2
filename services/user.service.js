@@ -4,8 +4,8 @@ const runtimeConfig = useRuntimeConfig()
 
 export const userService = {
 	// login,
-	resetRequest,
-	resetPassword,
+	// resetRequest,
+	// resetPassword,
 	// reset,
 	// getAll,
 	// getOne,
@@ -48,7 +48,7 @@ function login(username, password) {
 	return Axios(requestOptions).then(handleSuccess).catch(handleError)
 }
  */
-async function resetRequest(username) {
+/* async function resetRequest(username) {
 	const { data, error } = await useFetch('/users/resetrequest', {
 		method: 'POST',
 		body: { username },
@@ -68,7 +68,7 @@ async function resetPassword(username, password) {
 		},
 	})
 	return data
-}
+} */
 
 /* function resetPassword(user, pass) {
 	const requestOptions = {

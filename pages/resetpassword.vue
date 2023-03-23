@@ -42,8 +42,6 @@
 <script setup>
 	import '@formkit/themes/genesis'
 
-	import { userService } from '@/services'
-
 	// initialize formkit state
 	const username = ref('')
 
@@ -53,16 +51,14 @@
 	const cancelForm = () => {
 		navigateTo('/loginpage')
 	}
-	const handleSubmit = function () {
-		userService.resetRequest(username.value).then((result) => {
-			if (!result.error) {
-				navigateTo('/loginpage')
-			} else {
-				navigateTo('/loginpage')
-
-				// this.submitStatus = 'ERROR'
-				// this.error = username.error
-			}
+	const handleSubmit = async function () {
+		const { data, error } = await useFetch('/users/resetrequest', {
+			method: 'POST',
+			body: { username },
+			headers: {
+				authorization: 'not-needed',
+			},
 		})
+		navigateTo('/loginpage')
 	}
 </script>

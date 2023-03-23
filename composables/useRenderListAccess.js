@@ -2,6 +2,7 @@ import { useAuthStore } from '~~/stores/authStore'
 const auth = useAuthStore()
 
 export default function useRenderListAccess() {
+	// Probably not used
 	const access = ref({})
 
 	function getAccess(app) {
@@ -23,7 +24,6 @@ export default function useRenderListAccess() {
 		const user = JSON.parse(sessionStorage.getItem('auth'))
 		const temp = user.perms
 		const perms = temp.find((u) => u.admin_app_name === app)
-		console.log('IN useRL perms.admin_perm, app ', perms.admin_perm, app)
 		if (perms.admin_perm === 3) {
 			// all access
 			access.editable = true

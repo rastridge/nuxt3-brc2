@@ -34,21 +34,23 @@
 </template>
 
 <script setup>
-	import { userService } from '@/services/'
+	import '@formkit/themes/genesis'
 
-	const router = useRouter()
-	const navigate = (p) => {
-		return navigateTo({
-			path: p,
-		})
-	}
-
+	const route = useRoute()
 	const password = ref('')
 	const password_confirm = ref('')
+
 	const username = ref(route.params.username)
 
-	const submitHandler = () => {
-		userService.resetPassword(username.value, password.value)
-		navigate('/loginpage')
+	const submitHandler = async () => {
+		const { data, error } = await useFetch('/users/resetpassword', {
+			method: 'POST',
+			body: { username, password },
+			headers: {
+				authorization: 'not-needed',
+			},
+		})
+
+		navigateTo('/loginpage')
 	}
 </script>
