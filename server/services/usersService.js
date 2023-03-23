@@ -579,7 +579,7 @@ async function resetRequest({ username }) {
 			username +
 			'">Click here</a>' */
 		const msg =
-			'To reset your user admin password <a href="https://lustrous-halva-085afc.netlify.app//reset/' +
+			'To reset your user admin password <a href="https://lustrous-halva-085afc.netlify.app/reset/' +
 			username +
 			'">Click here</a>'
 
