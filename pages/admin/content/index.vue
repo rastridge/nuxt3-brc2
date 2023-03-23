@@ -5,14 +5,14 @@
 		</Head>
 		<common-header title="Custom pages List" />
 
-		<div class="text-center m-5">
+		<!-- 		<div class="text-center m-5">
 			<Button
 				class="p-button-sm"
 				label="Add page"
 				@click="navigateTo('/admin/content/add')"
 			>
 			</Button>
-		</div>
+		</div> -->
 
 		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
 

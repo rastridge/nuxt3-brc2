@@ -5,7 +5,7 @@
 		</Head>
 		<common-header title="Users List" />
 
-		<div class="text-center m-5">
+		<!-- 		<div class="text-center m-5">
 			<Button
 				class="p-button-sm"
 				label="Add account"
@@ -13,7 +13,7 @@
 			>
 			</Button>
 		</div>
-
+ -->
 		<render-list
 			:data="users"
 			:app="app"

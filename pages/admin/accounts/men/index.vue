@@ -5,14 +5,14 @@
 		</Head>
 		<common-header title="Account List" />
 
-		<div class="text-center m-5">
+		<!-- 		<div class="text-center m-5">
 			<Button
 				class="p-button-sm"
 				label="Add account"
 				@click="navigateTo('/admin/accounts/men/add')"
 			>
 			</Button>
-		</div>
+		</div> -->
 		<render-list
 			:data="accounts"
 			:app="app"

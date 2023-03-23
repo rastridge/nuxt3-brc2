@@ -6,7 +6,7 @@
 		<common-header title="News Items List" />
 
 		<!-- Add Button -->
-		<div class="text-center m-5">
+		<!-- 		<div class="text-center m-5">
 			<Button
 				class="p-button-sm"
 				label="Add News Item"
@@ -14,7 +14,7 @@
 			>
 			</Button>
 		</div>
-
+ -->
 		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
 
 		<!--Select year -->

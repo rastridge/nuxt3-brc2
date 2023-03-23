@@ -6,7 +6,7 @@
 		<common-header title="Images List" />
 
 		<!-- Add Button -->
-		<div class="text-center m-5">
+		<!-- 			<div class="text-center m-5">
 			<Button
 				class="p-button-sm"
 				label="Add image"
@@ -14,6 +14,7 @@
 			>
 			</Button>
 		</div>
+		-->
 
 		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
 

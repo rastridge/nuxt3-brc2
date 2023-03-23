@@ -1,5 +1,13 @@
 <template>
 	<div>
+		<div class="text-center m-5">
+			<Button
+				class="p-button-sm"
+				label="Add new"
+				@click="navigateTo(`/admin/${app}/add`)"
+			>
+			</Button>
+		</div>
 		<div v-if="viewable">
 			<div class="table-box">
 				<DataTable
