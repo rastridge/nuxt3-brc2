@@ -23,7 +23,9 @@ export default function useRenderListAccess() {
 		access.viewable = true
 		const user = JSON.parse(sessionStorage.getItem('auth'))
 		const temp = user.perms
+
 		const perms = temp.find((u) => u.admin_app_name === app)
+
 		if (perms.admin_perm === 3) {
 			// all access
 			access.editable = true

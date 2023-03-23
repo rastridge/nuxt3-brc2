@@ -31,7 +31,7 @@ export const usersService = {
 	getApps,
 	getAppPerms,
 	_setPerms,
-	initPerms,
+	// initPerms,
 	resetRequest,
 	resetPassword,
 	deleteOne,
@@ -86,7 +86,8 @@ async function _getPerms(id) {
 								AND
 								u.admin_user_id = p.admin_user_id
 								AND
-								p.admin_user_id  = ${id}`
+								p.admin_user_id  = ${id}
+								ORDER BY a.admin_app_name ASC`
 
 	const perms = await doDBQuery(sql)
 
@@ -207,8 +208,10 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 							where deleted = 0`
 		const [rows, fields] = await conn.execute(sql)
 		const users = rows
+
 		const lc_admin_user_name = admin_user_name.toLowerCase()
 		const lc_admin_user_email = admin_user_email.toLowerCase()
+
 		let user = users.find(
 			(u) =>
 				u.admin_user_name === lc_admin_user_name ||
@@ -235,7 +238,7 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 			let inserts = []
 			inserts.push(lc_admin_user_name, hashedpassword, lc_admin_user_email)
 			sql = mysql.format(sql, inserts)
-			// console.log('INSert INTO inbrc_admin_users sql = ', sql)
+			console.log('INSert INTO inbrc_admin_users sql = ', sql)
 			const [rows, fields] = await conn.execute(sql)
 			user = rows
 			// save id of new user
@@ -243,36 +246,29 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 			console.log('1 user.insertId = ', user.insertId)
 
 			// initial permissions with view only
-			await Promise.all(
-				perms.map(async (value) => {
-					sql = `INSERT INTO inbrc_admin_perms
-										SET
-											admin_user_id = ?,
-											admin_app_id = ?,
-											admin_perm = ?`
 
-					inserts = []
-					inserts.push(id, value.admin_app_id, value.admin_perm)
-					sql = mysql.format(sql, inserts)
-					console.log('INSERT INTO inbrc_admin_perms sql= ', sql)
-					await conn.execute(sql)
-				})
-			)
-
-			/* perms.forEach(async (value) => {
-				sql = `INSERT INTO inbrc_admin_perms
-										SET
-											admin_user_id = ?,
-											admin_app_id = ?,
-											admin_perm = ?`
+			for (let p of perms) {
+				sql = `INSERT INTO 
+									inbrc_admin_perms
+								SET
+									admin_user_id = ?,
+									admin_app_id = ?,
+									admin_perm = ?`
 
 				inserts = []
-				inserts.push(id, value.admin_app_id, value.admin_perm)
+				inserts.push(id, p.admin_app_id, p.admin_perm)
 				sql = mysql.format(sql, inserts)
-				console.log('INSERT INTO inbrc_admin_perms sql= ', sql)
+				// console.log('INSERT INTO inbrc_admin_perms sql= ', sql)
+
 				await conn.execute(sql)
-			})
-*/
+				console.log(
+					'INSERT INTO inbrc_admin_perms id, p.admin_app_id, p.admin_perm= ',
+					id,
+					p.admin_app_id,
+					p.admin_perm
+				)
+			}
+
 			const msg =
 				'An account for user ' +
 				lc_admin_user_name +
@@ -339,16 +335,14 @@ async function editOne(info) {
 		password,
 	} = info
 
-	const conn = await mysql.createPool({
-		host: config.DB_HOST,
-		user: config.DB_USER,
-		password: config.DB_PASSWORD,
-		database: config.DB_DATABASE,
-	})
-
 	try {
+		const conn = await mysql.createPool({
+			host: config.DB_HOST,
+			user: config.DB_USER,
+			password: config.DB_PASSWORD,
+			database: config.DB_DATABASE,
+		})
 		await conn.query('START TRANSACTION')
-		console.log('1a')
 
 		// check for existing admin_user_name or admin_user_email
 		let sql = `SELECT *
@@ -362,15 +356,6 @@ async function editOne(info) {
 		const lc_admin_user_email = admin_user_email.toLowerCase()
 
 		let user = users.find((u) => {
-			/* 			console.log(
-				'users other find = ',
-				u.admin_user_name,
-				lc_admin_username,
-				u.admin_user_email,
-				lc_admin_user_email,
-				u.admin_user_name == lc_admin_username ||
-					u.admin_user_email == lc_admin_user_email
-			) */
 			return (
 				u.admin_user_name == lc_admin_username ||
 				u.admin_user_email == lc_admin_user_email
@@ -413,7 +398,7 @@ async function editOne(info) {
 			const [rows, fields] = await conn.execute(sql)
 			user = rows
 
-			// update user perms by deleting old - creating new
+			// update user perms by deleting records - creating new
 			sql = `DELETE
 						FROM
 							inbrc_admin_perms
@@ -424,9 +409,7 @@ async function editOne(info) {
 
 			// update perms
 			// loop through existing perms array
-			perms.forEach(newPerms)
-
-			async function newPerms(value, index) {
+			for (let p of perms) {
 				sql = `INSERT
 							INTO inbrc_admin_perms
 								(
@@ -434,9 +417,9 @@ async function editOne(info) {
 									admin_app_id,
 									admin_perm
 								) values (
-									${value.admin_user_id},
-									${value.admin_app_id},
-									${value.admin_perm}
+									${p.admin_user_id},
+									${p.admin_app_id},
+									${p.admin_perm}
 								)`
 				await conn.execute(sql)
 			}
@@ -456,7 +439,6 @@ async function editOne(info) {
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			// console.log(emaildata)
 			// sendEmail(emaildata)
 		} else {
 			const msg = 'A user with this username or email already exists'
@@ -509,7 +491,7 @@ async function getApps() {
                     admin_app_name
                 FROM inbrc_admin_apps
                 ORDER BY
-                    admin_app_id`
+                    admin_app_name`
 
 	// console.log('in getApps sql = ', sql)
 	const apps = await doDBQuery(sql)
@@ -521,19 +503,21 @@ async function getApps() {
 /*              initPerms                  */
 /*                                         */
 /***************************************** */
-async function initPerms() {
+/* async function initPerms() {
 	const sql = `SELECT
 								admin_app_id,
 								admin_app_name
 							FROM
 								inbrc_admin_apps
-							WHERE 1`
+							WHERE 1 
+							ORDER BY
+                    admin_app_id`
 
 	const perms = await doDBQuery(sql)
 
 	return perms
 }
-/***************************************** */
+ */ /***************************************** */
 /*              getAppPerms                */
 /*                                         */
 /***************************************** */

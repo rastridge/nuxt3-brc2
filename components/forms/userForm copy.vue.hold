@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<!-- permsArray {{ permsArray }} -->
 		<div v-if="!state" class="spinner-border text-primary" role="status">
 			<span class="visually-hidden">Loading...</span>
 		</div>
@@ -167,10 +168,9 @@
 	}
 	const match = computed(() => state.password !== repeatPass.value)
 	const required = computed(() => state.password === '')
-	//
-	// Required input tests
 	const username_required = computed(() => state.admin_user_name === '')
 	const email_required = computed(() => state.admin_user_email === '')
+	const addForm = props.id === 0
 
 	// get app names for access perms
 	const { data: apps_data } = await useFetch(`/users/getapps`, {
@@ -181,22 +181,18 @@
 	})
 
 	//
-	// Add or edit?
-	const addForm = props.id === 0
-
-	//
 	// Initialize form
 	//
 	// get init perms
-	/* 	const { data: initperms } = await useFetch('/users/initperms', {
+	const { data: initperms } = await useFetch('/users/initperms', {
 		method: 'get',
 		headers: {
 			authorization: auth.user.token,
 		},
 	})
- */
+
 	const permsArray = ref([])
-	apps_data.value.forEach((i) => {
+	initperms.value.forEach((i) => {
 		permsArray.value.push({
 			admin_perm_id: 0,
 			admin_app_id: i.admin_app_id,
@@ -214,8 +210,10 @@
 		password: '',
 		perms: permsArray.value,
 	})
-	// users id exists - get user data
-	if (!addForm) {
+
+	// if users id exists - get user data
+	//
+	if (props.id !== 0) {
 		// get user data
 		const { data: form_data } = await useFetch(`/users/${props.id}`, {
 			method: 'get',
@@ -234,6 +232,7 @@
 	// form handlers
 	//
 	const submitForm = (state) => {
+		console.log('in submitForm state = ', state)
 		emit('submitted', state)
 	}
 	const cancelForm = () => {
