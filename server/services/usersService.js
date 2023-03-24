@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const { EE_API_KEY } = useRuntimeConfig()
 const { sendEmail } = useEmail()
-// import sendEmail from '~~/server/utils/sendEmail.mjs'
 
 // import querystring from 'querystring'
 // import https from 'https'
@@ -288,7 +287,7 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 				body_html: '<h3>' + msg + '</h3>',
 			}
 			// console.log('4 emaildata= ', emaildata)
-			// sendEmail(emaildata)
+			sendEmail(emaildata)
 		} else {
 			const msg =
 				'A user with username ' +
@@ -309,7 +308,7 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 				body_html: '<h3>' + msg + '</h3>',
 			}
 
-			// sendEmail(emaildata)
+			sendEmail(emaildata)
 		}
 
 		await conn.query('COMMIT')
@@ -440,7 +439,7 @@ async function editOne(info) {
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			// sendEmail(emaildata)
+			sendEmail(emaildata)
 		} else {
 			const msg = 'A user with this username or email already exists'
 			user = { message: msg }
@@ -455,7 +454,7 @@ async function editOne(info) {
 			// console.log(emaildata)
 			console.log('EXISTS ', msg)
 
-			// sendEmail(emaildata)
+			sendEmail(emaildata)
 		}
 
 		await conn.query('COMMIT')
@@ -608,7 +607,6 @@ async function resetPassword({ username, password }) {
 	console.log(' IN resetpassword email_data = ', email_data)
 
 	const sc = sendEmail(email_data)
-	console.log(' IN resetpassword sc = ', sc)
 
-	return sc
+	return 'Probably sent ok'
 }
