@@ -3,6 +3,7 @@ import https from 'https'
 
 export default function useEmail() {
 	const { EE_API_KEY } = useRuntimeConfig()
+	console.log('IN useSendEmail EE_API_KEY = ', EE_API_KEY)
 
 	function sendEmail(email_data) {
 		const post_data = querystring.stringify({
@@ -41,7 +42,8 @@ export default function useEmail() {
 
 		post_req.write(post_data)
 		post_req.end()
-		return statusCode
+
+		return result
 	}
 	return {
 		sendEmail,

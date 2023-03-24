@@ -2,8 +2,11 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const { EE_API_KEY } = useRuntimeConfig()
-import querystring from 'querystring'
-import https from 'https'
+const { sendEmail } = useEmail()
+// import sendEmail from '~~/server/utils/sendEmail.mjs'
+
+// import querystring from 'querystring'
+// import https from 'https'
 const config = useRuntimeConfig()
 
 async function doDBQuery(sql, inserts) {
@@ -305,8 +308,6 @@ async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			// console.log('emaildata= ', emaildata)
-			// console.log('EXISTS ', msg)
 
 			// sendEmail(emaildata)
 		}
@@ -559,7 +560,7 @@ async function resetRequest({ username }) {
 	// if username exists
 	if (cnt) {
 		/* const msg =
-			'To reset your user admin password <a href="http://localhost:3000/reset/' +
+			'To reset your user admin password <a href="http://localhost:58117/reset/' +
 			username +
 			'">Click here</a>' */
 		const msg =
@@ -574,47 +575,6 @@ async function resetRequest({ username }) {
 			subject: 'BRC Admin User Password Reset',
 			body_text: '',
 			body_html: '<h3>' + msg + '</h3>',
-		}
-		// helper
-		const sendEmail = (email) => {
-			const post_data = querystring.stringify({
-				api_key: EE_API_KEY,
-				subject: email.subject,
-				from: email.from,
-				from_name: email.from_name,
-				to: email.to,
-				// to: "rfa@me.com",
-				body_html: email.body_html,
-				body_text: email.body_text,
-				isTransactional: true,
-			})
-			const post_options = {
-				hostname: 'api.elasticemail.com',
-				path: '/v2/email/send',
-				port: '443',
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'Content-Length': post_data.length,
-				},
-			}
-
-			let result = ''
-			const post_req = https.request(post_options, function (res) {
-				res.setEncoding('utf8')
-				res.on('data', function (chunk) {
-					result = chunk
-					const { statusCode, statusMessage, headers } = res
-				})
-				res.on('error', function (e) {
-					result = 'Error: ' + e.message
-				})
-			})
-
-			post_req.write(post_data)
-			post_req.end()
-
-			// console.log(' IN sendMail end ')
 		}
 		sendEmail(email_data)
 	}
@@ -644,45 +604,11 @@ async function resetPassword({ username, password }) {
 		body_text: '',
 		body_html: `<h3>The password has been changed for ${username}. The new password is "${password}"</h3>`,
 	}
-	// helper
-	const sendEmail = (email) => {
-		const post_data = querystring.stringify({
-			api_key: EE_API_KEY,
-			subject: email.subject,
-			from: email.from,
-			from_name: email.from_name,
-			to: email.to,
-			// to: "rfa@me.com",
-			body_html: email.body_html,
-			body_text: email.body_text,
-			isTransactional: true,
-		})
-		const post_options = {
-			hostname: 'api.elasticemail.com',
-			path: '/v2/email/send',
-			port: '443',
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Content-Length': post_data.length,
-			},
-		}
 
-		let result = ''
-		const post_req = https.request(post_options, function (res) {
-			res.setEncoding('utf8')
-			res.on('data', function (chunk) {
-				result = chunk
-				const { statusCode, statusMessage, headers } = res
-			})
-			res.on('error', function (e) {
-				result = 'Error: ' + e.message
-			})
-		})
+	console.log(' IN resetpassword email_data = ', email_data)
 
-		post_req.write(post_data)
-		post_req.end()
-	}
-	sendEmail(email_data)
-	return result
+	const sc = sendEmail(email_data)
+	console.log(' IN resetpassword sc = ', sc)
+
+	return sc
 }

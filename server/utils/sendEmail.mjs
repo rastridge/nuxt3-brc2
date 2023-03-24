@@ -1,10 +1,9 @@
-// const querystring = require('querystring')
-// const https = require('https')
-// import querystring from 'querystring'
-// import https from 'https'
-// const EE_API_KEY = useRuntimeConfig()
+import querystring from 'querystring'
+import https from 'https'
 
-export default function sendByElasticEmail(email) {
+export default function sendEmail(email) {
+	const { EE_API_KEY } = useRuntimeConfig()
+
 	// Single email - script from ElasticEmail
 	const post_data = querystring.stringify({
 		api_key: EE_API_KEY,
@@ -43,4 +42,6 @@ export default function sendByElasticEmail(email) {
 
 	post_req.write(post_data)
 	post_req.end()
+
+	return statusCode
 }
