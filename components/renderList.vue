@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="text-center m-5">
+		<div v-if="addable" class="text-center m-5">
 			<Button
 				class="p-button-sm"
 				label="Add new"
@@ -122,6 +122,7 @@
 		pagesize: { type: Number, default: 15, required: false },
 		app: { type: String, default: '', required: true },
 		statusable: { type: Boolean, default: false, required: false },
+		addable: { type: Boolean, default: false, required: false },
 		editable: { type: Boolean, default: false, required: false },
 		deleteable: { type: Boolean, default: false, required: false },
 		viewable: { type: Boolean, default: false, required: false },

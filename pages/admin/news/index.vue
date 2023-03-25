@@ -50,7 +50,14 @@
 	const { getAccess } = useRenderListAccess()
 	const app = 'news'
 	const { editable, addable, deleteable, statusable, viewable } = getAccess(app)
-
+	console.log(
+		'editable, addable, deleteable, statusable, viewable ',
+		editable,
+		addable,
+		deleteable,
+		statusable,
+		viewable
+	)
 	const startyear = ref(2020)
 	const { $dayjs } = useNuxtApp()
 	let year = ref(parseInt($dayjs().format('YYYY')))

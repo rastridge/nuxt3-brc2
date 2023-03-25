@@ -9,7 +9,8 @@ const {
 	TWILIO_ACCOUNT_SID,
 	TWILIO_AUTH_TOKEN,
 } = useRuntimeConfig()
-
+const { doDBQuery } = useQuery()
+/* 
 async function doDBQuery(sql, inserts) {
 	const CONN = await mysql.createPool({
 		host: DB_HOST,
@@ -25,7 +26,7 @@ async function doDBQuery(sql, inserts) {
 	await CONN.end()
 	return rows
 }
-
+ */
 export const smsService = {
 	getAll,
 	sendSMS,

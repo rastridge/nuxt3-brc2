@@ -12,6 +12,8 @@ const {
 	EE_API_KEY,
 } = useRuntimeConfig()
 
+const { doDBQuery } = useQuery()
+/* 
 async function doDBQuery(sql, inserts) {
 	const conn1 = await mysql.createPool({
 		host: DB_HOST,
@@ -25,7 +27,7 @@ async function doDBQuery(sql, inserts) {
 	const [rows, fields] = await conn1.execute(sql)
 	await conn1.end()
 	return rows
-}
+} */
 export const newslettersService = {
 	getAll,
 	getYear,

@@ -3,11 +3,12 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const { EE_API_KEY } = useRuntimeConfig()
 const { sendEmail } = useEmail()
+const { doDBQuery } = useQuery()
 
 // import querystring from 'querystring'
 // import https from 'https'
 const config = useRuntimeConfig()
-
+/* 
 async function doDBQuery(sql, inserts) {
 	const conn1 = await mysql.createPool({
 		host: config.DB_HOST,
@@ -23,7 +24,7 @@ async function doDBQuery(sql, inserts) {
 	await conn1.end()
 	return rows
 }
-
+ */
 export const usersService = {
 	authenticate,
 	getAll,
@@ -554,6 +555,7 @@ async function resetRequest({ username }) {
 								admin_user_name = '${username}'`
 
 	const rows = await doDBQuery(sql)
+
 	const cnt = rows[0].cnt
 	const admin_user_email = rows[0].admin_user_email
 	// if username exists

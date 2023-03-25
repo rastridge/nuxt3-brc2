@@ -1,7 +1,8 @@
 import mysql from 'mysql2/promise'
 
 const CONFIG = useRuntimeConfig()
-
+const { doDBQuery } = useQuery()
+/* 
 async function doDBQuery(sql, inserts) {
 	const conn1 = await mysql.createPool({
 		host: CONFIG.DB_HOST,
@@ -16,7 +17,7 @@ async function doDBQuery(sql, inserts) {
 	await conn1.end()
 	return rows
 }
-
+ */
 export const contentService = {
 	getAll,
 	getCustomMenuItems,

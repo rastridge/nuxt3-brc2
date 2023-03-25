@@ -4,7 +4,8 @@ import sharp from 'sharp'
 import mysql from 'mysql2/promise'
 
 const CONFIG = useRuntimeConfig()
-
+const { doDBQuery } = useQuery()
+/* 
 async function doDBQuery(sql, inserts) {
 	const CONN = await mysql.createPool({
 		host: CONFIG.DB_HOST,
@@ -21,7 +22,7 @@ async function doDBQuery(sql, inserts) {
 	await CONN.end()
 	return rows
 }
-
+ */
 export const imageService = {
 	upLoad,
 	getAll,
