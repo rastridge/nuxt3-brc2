@@ -1,7 +1,9 @@
 import mysql from 'mysql2/promise'
+import useDBConnection from '../utils/useDBConnection'
 
 const CONFIG = useRuntimeConfig()
 const { doDBQuery } = useQuery()
+
 /* 
 async function doDBQuery(sql, inserts) {
 	const conn1 = await mysql.createPool({

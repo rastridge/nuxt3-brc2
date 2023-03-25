@@ -79,10 +79,10 @@
 					type="tel"
 					label="Phone number"
 					name="account_addr_phone"
-					placeholder="1##########"
+					placeholder="+# (###) ###-####"
 					validation="required"
 					:validation-messages="{
-						matches: 'Phone number must be in the format +1##########',
+						matches: 'Phone number must be in the format +# (###) ###-####',
 					}"
 				/>
 				<FormKit

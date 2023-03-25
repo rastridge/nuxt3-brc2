@@ -1,8 +1,7 @@
 import mysql from 'mysql2/promise'
-import querystring from 'querystring'
-import https from 'https'
-// const { sendByElasticEmail } = useEmail()
 
+const { doDBQuery } = useQuery()
+const { getConnection } = useDBConnection()
 const {
 	DB_DATABASE,
 	DB_PASSWORD,
@@ -13,20 +12,6 @@ const {
 	EE_API_KEY,
 } = useRuntimeConfig()
 
-async function doDBQuery(sql, inserts) {
-	const conn1 = await mysql.createPool({
-		host: DB_HOST,
-		user: DB_USER,
-		password: DB_PASSWORD,
-		database: DB_DATABASE,
-	})
-	if (inserts) {
-		sql = mysql.format(sql, inserts)
-	}
-	const [rows, fields] = await conn1.execute(sql)
-	await conn1.end()
-	return rows
-}
 export const newslettersService = {
 	getAll,
 	getYear,
@@ -402,15 +387,8 @@ async function getOne(id) {
 }
 
 async function trackNewsletter(query) {
-	const conn = await mysql.createPool({
-		host: DB_HOST,
-		user: DB_USER,
-		password: DB_PASSWORD,
-		database: DB_DATABASE,
-	})
-	console.log('IN trackNewsletter query = ', query)
-
 	try {
+		const conn = await getConnection()
 		await conn.query('START TRANSACTION')
 
 		// update member last email opened date

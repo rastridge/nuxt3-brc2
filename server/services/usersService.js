@@ -4,27 +4,12 @@ import jwt from 'jsonwebtoken'
 const { EE_API_KEY } = useRuntimeConfig()
 const { sendEmail } = useEmail()
 const { doDBQuery } = useQuery()
+const { getConnection } = useDBConnection()
 
 // import querystring from 'querystring'
 // import https from 'https'
 const config = useRuntimeConfig()
-/* 
-async function doDBQuery(sql, inserts) {
-	const conn1 = await mysql.createPool({
-		host: config.DB_HOST,
-		user: config.DB_USER,
-		password: config.DB_PASSWORD,
-		database: config.DB_DATABASE,
-	})
-	if (inserts) {
-		sql = mysql.format(sql, inserts)
-	}
-	// console.log('in doDBQuery sql = ', sql)
-	const [rows, fields] = await conn1.execute(sql)
-	await conn1.end()
-	return rows
-}
- */
+
 export const usersService = {
 	authenticate,
 	getAll,
@@ -196,13 +181,7 @@ async function deleteOne(id) {
 /***************************************** */
 async function addOne({ admin_user_name, password, admin_user_email, perms }) {
 	try {
-		const conn = await mysql.createPool({
-			host: config.DB_HOST,
-			user: config.DB_USER,
-			password: config.DB_PASSWORD,
-			database: config.DB_DATABASE,
-		})
-
+		const conn = await getConnection()
 		await conn.query('START TRANSACTION')
 
 		// check for existing username or email
@@ -337,12 +316,7 @@ async function editOne(info) {
 	} = info
 
 	try {
-		const conn = await mysql.createPool({
-			host: config.DB_HOST,
-			user: config.DB_USER,
-			password: config.DB_PASSWORD,
-			database: config.DB_DATABASE,
-		})
+		const conn = await getConnection()
 		await conn.query('START TRANSACTION')
 
 		// check for existing admin_user_name or admin_user_email

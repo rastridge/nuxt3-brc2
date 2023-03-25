@@ -2,21 +2,9 @@ import mysql from 'mysql2/promise'
 
 const { DB_DATABASE, DB_PASSWORD, DB_USER, DB_HOST, FROM, FROM_NAME } =
 	useRuntimeConfig()
+const { doDBQuery } = useQuery()
+const { getConnection } = useDBConnection()
 
-async function doDBQuery(sql, inserts) {
-	const conn1 = await mysql.createPool({
-		host: DB_HOST,
-		user: DB_USER,
-		password: DB_PASSWORD,
-		database: DB_DATABASE,
-	})
-	if (inserts) {
-		sql = mysql.format(sql, inserts)
-	}
-	const [rows, fields] = await conn1.execute(sql)
-	await conn1.end()
-	return rows
-}
 export const smsService = {
 	getAll,
 	getYear,
@@ -224,15 +212,8 @@ async function getOne(id) {
 }
 
 async function trackSMS(query) {
-	const conn = await mysql.createPool({
-		host: DB_HOST,
-		user: DB_USER,
-		password: DB_PASSWORD,
-		database: DB_DATABASE,
-	})
-	console.log('IN trackNewsletter query = ', query)
-
 	try {
+		const conn = await getConnection()
 		await conn.query('START TRANSACTION')
 
 		// update member last email opened date

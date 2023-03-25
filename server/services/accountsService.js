@@ -2,23 +2,8 @@
 const CONFIG = useRuntimeConfig()
 
 const { doDBQuery } = useQuery()
-/* 
-async function doDBQuery(sql, inserts) {
-	const conn1 = await mysql.createPool({
-		host: CONFIG.DB_HOST,
-		user: CONFIG.DB_USER,
-		password: CONFIG.DB_PASSWORD,
-		database: CONFIG.DB_DATABASE,
-	})
-	if (inserts) {
-		sql = mysql.format(sql, inserts)
-	}
+const { getConnection } = useDBConnection()
 
-	const [rows, fields] = await conn1.execute(sql)
-	await conn1.end()
-	return rows
-}
- */
 export const accountsService = {
 	getAll,
 	getOne,
@@ -77,14 +62,8 @@ async function getOne(id) {
 /*              addOne                     */
 /***************************************** */
 async function addOne(info) {
-	const conn = await mysql.createPool({
-		host: CONFIG.DB_HOST,
-		user: CONFIG.DB_USER,
-		password: CONFIG.DB_PASSWORD,
-		database: CONFIG.DB_DATABASE,
-	})
-
 	try {
+		const conn = await getConnection()
 		await conn.query('START TRANSACTION')
 		console.log('START TRANSACTION')
 
@@ -247,14 +226,8 @@ async function addOne(info) {
 /*               editOne                   */
 /***************************************** */
 async function editOne(info) {
-	const conn = await mysql.createPool({
-		host: CONFIG.DB_HOST,
-		user: CONFIG.DB_USER,
-		password: CONFIG.DB_PASSWORD,
-		database: CONFIG.DB_DATABASE,
-	})
-
 	try {
+		const conn = await getConnection()
 		await conn.query('START TRANSACTION')
 		console.log('START TRANSACTION')
 
