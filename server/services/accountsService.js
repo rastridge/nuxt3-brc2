@@ -63,7 +63,11 @@ async function getOne(id) {
 /***************************************** */
 async function addOne(info) {
 	try {
+		console.log('try addOne 1')
+
 		const conn = await getConnection()
+		console.log('try addOne 2 ')
+
 		await conn.query('START TRANSACTION')
 		console.log('START TRANSACTION')
 
@@ -72,7 +76,6 @@ async function addOne(info) {
 							from inbrc_accounts
 							where deleted = 0`
 		const [rows, fields] = await conn.execute(sql)
-		console.log('1 ', sql)
 
 		const accounts = rows
 		const lc_account_email = info.account_email.toLowerCase()

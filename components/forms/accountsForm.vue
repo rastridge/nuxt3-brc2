@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div
-			v-if="!memberTypeOptions || !memberAdminTypeOptions"
+			v-if="!memberTypeOptions && !memberAdminTypeOptions"
 			class="spinner-border text-primary"
 			role="status"
 		>
@@ -56,35 +56,57 @@
 					name="account_addr_city"
 					validation="required"
 				/>
-				<FormKit
+				<!-- <FormKit
 					type="text"
 					label="State"
 					name="account_addr_state"
 					validation="required"
 				/>
-				<FormKit
+ -->
+				<!-- <FormKit
 					type="text"
 					label="Country"
 					name="account_addr_country"
 					validation="required"
+				/> -->
+
+				<!-- 				<FormKit
+					type="select"
+					label="Country"
+					name="account_addr_country"
+					:options="justCountries"
+					validation="required"
 				/>
+
+				<FormKit
+					type="select"
+					label="Region"
+					name="account_addr_state"
+					:options="justRegions"
+					validation="required"
+				/> -->
+				<input-country-region
+					:fields="state"
+					@changeLocation="changeLocation"
+				/>
+				<br />IN accts form state.account_addr_country =
+				{{ state.account_addr_country }}<br />
+				state.account_addr_state = {{ state.account_addr_state }}
 				<FormKit
 					type="text"
 					label="Postal Code"
 					name="account_addr_postal"
 					validation="required | matches:/^[0-9]{5}$/"
 				/>
+				<div style="width: 90%; padding-bottom: 0.5rem">
+					<h4>Phone</h4>
+					<vue-tel-input
+						mode="international"
+						v-bind="bindProps"
+						v-model="state.account_addr_phone"
+					></vue-tel-input>
+				</div>
 
-				<FormKit
-					type="tel"
-					label="Phone number"
-					name="account_addr_phone"
-					placeholder="+# (###) ###-####"
-					validation="required"
-					:validation-messages="{
-						matches: 'Phone number must be in the format +# (###) ###-####',
-					}"
-				/>
 				<FormKit
 					type="select"
 					label="Show phone?"
@@ -158,10 +180,13 @@
 </template>
 
 <script setup>
+	import { VueTelInput } from 'vue-tel-input'
+	import 'vue-tel-input/dist/vue-tel-input.css'
 	import '@formkit/themes/genesis'
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
 	const { $dayjs } = useNuxtApp()
+
 	//
 	// Outgoing
 	//
@@ -175,9 +200,12 @@
 	//
 	// initialize form for add
 	//
-	let state = ref({})
+	const state = ref({})
+
 	state.value.member_year = $dayjs().format('YYYY')
 	state.value.member_show_phone = '1'
+	state.value.account_addr_state = 'NY'
+	state.value.account_addr_country = 'US'
 	state.value.member_show_addr = '1'
 	state.value.newsletter_recipient = '1'
 	state.value.mail_recipient = '0'
@@ -205,6 +233,7 @@
 		state.value = formdata.value
 	}
 
+	//
 	// get member admin types for select
 	const { data: memberAdminTypes } = await useFetch(
 		'/accounts/memberadmintypes',
@@ -226,9 +255,11 @@
 		})
 		return result
 	}
+
 	const memberAdminTypeOptions = getMemberAdminTypeOptions(
 		memberAdminTypes.value
 	)
+	//
 	// get member types
 	const { data: memberTypes } = await useFetch('/accounts/membertypes', {
 		method: 'get',
@@ -249,7 +280,14 @@
 	}
 	const memberTypeOptions = getMemberTypeOptions(memberTypes.value)
 
+	//
 	// form handlers
+
+	const changeLocation = function (state) {
+		state.value.account_addr_country = state.account_addr_country
+		state.value.account_addr_state = state.account_addr_state
+	}
+
 	const submitForm = (state) => {
 		emit('submitted', state)
 	}
@@ -257,4 +295,33 @@
 	const cancelForm = () => {
 		navigateTo('/admin/accounts/men') // needs to be / for self register
 	}
+
+	//
+	// Set properties of Telephone Input
+	//
+	const bindProps = ref({
+		mode: 'international',
+		defaultCountry: 'US',
+		disabledFetchingCountry: false,
+		disabled: false,
+		disabledFormatting: false,
+		required: true,
+		dynamicPlaceholder: true,
+		enabledCountryCode: true,
+		enabledFlags: true,
+		preferredCountries: ['US', 'CA'],
+		autocomplete: 'off',
+		name: 'account_addr_phone',
+		maxLen: 25,
+		wrapperClasses: '',
+		inputClasses: '',
+		dropdownOptions: {
+			disabledDialCode: false,
+		},
+		inputOptions: {
+			showDialCode: true,
+		},
+	})
 </script>
+
+<style scoped></style>

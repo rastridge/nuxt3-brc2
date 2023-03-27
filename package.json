@@ -16,6 +16,7 @@
     "@pinia/nuxt": "^0.4.7",
     "@vueup/vue-quill": "^1.1.0",
     "bcrypt": "^5.1.0",
+    "country-region-data": "^2.7.0",
     "dayjs": "^1.11.7",
     "formidable": "v3",
     "jsonwebtoken": "^9.0.0",
@@ -28,6 +29,8 @@
     "sass": "^1.58.3",
     "sharp": "^0.31.3",
     "sweetalert2": "^11.7.3",
-    "twilio": "^4.8.0"
+    "twilio": "^4.8.0",
+    "vue-country-region-select": "^2.0.16",
+    "vue-tel-input": "^6.0.5"
   }
 }
