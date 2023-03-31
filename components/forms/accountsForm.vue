@@ -86,7 +86,7 @@
 					validation="required"
 				/> -->
 				<input-country-region
-					:fields="state"
+					:fields="location"
 					@changeLocation="changeLocation"
 				/>
 				<br />IN accts form state.account_addr_country =
@@ -210,6 +210,12 @@
 	state.value.newsletter_recipient = '1'
 	state.value.mail_recipient = '0'
 	state.value.sms_recipient = '1'
+
+	//
+	// Prop for country-region input
+	const location = ref({})
+	location.value.account_addr_state = state.value.account_addr_state
+	location.value.account_addr_country = state.value.account_addr_country
 
 	//
 	// edit if there is an id - add if not

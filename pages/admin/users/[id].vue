@@ -8,8 +8,10 @@
 		<div v-if="alert.message" :class="`alert ${alert.type}`">
 			{{ alert.message }}
 		</div>
-		<p v-if="saving" class="text-center text-xl">Saving - Be patient</p>
-		<user-form :id="id" @submitted="onSubmit" />
+		<p v-if="saving" class="text-center text-2xl">Saving ...</p>
+		<div v-else>
+			<user-form :id="id" @submitted="onSubmit" />
+		</div>
 	</div>
 </template>
 
@@ -30,15 +32,16 @@
 	//
 	// Users form action
 	//
-	const onSubmit = async function (form_state) {
-		saving.value = true
-		const { data, pending, error } = await useFetch('/users/editone', {
+	const onSubmit = function (form_state) {
+		const { data, pending, error } = useFetch('/users/editone', {
+			lazy: true,
 			method: 'post',
 			body: form_state,
 			headers: {
 				authorization: auth.user.token,
 			},
 		})
+		saving.value = pending.value
 		if (data.value.message) {
 			alert.error(data.value.message)
 		} else {

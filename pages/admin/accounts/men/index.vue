@@ -4,26 +4,21 @@
 			<Title>Accounts List</Title>
 		</Head>
 		<common-header title="Account List" />
+		<div v-if="pending" class="text-center text-2xl">Loading ...</div>
 
-		<!-- 		<div class="text-center m-5">
-			<Button
-				class="p-button-sm"
-				label="Add account"
-				@click="navigateTo('/admin/accounts/men/add')"
-			>
-			</Button>
-		</div> -->
-		<render-list
-			:data="accounts"
-			:app="app"
-			:statusable="statusable"
-			:editable="editable"
-			:deleteable="deleteable"
-			:addable="addable"
-			:viewable="viewable"
-			@changeStatus="changeStatus"
-			@deleteItem="deleteItem"
-		/>
+		<div v-else>
+			<render-list
+				:data="accounts"
+				:app="app"
+				:statusable="statusable"
+				:editable="editable"
+				:deleteable="deleteable"
+				:addable="addable"
+				:viewable="viewable"
+				@changeStatus="changeStatus"
+				@deleteItem="deleteItem"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -50,7 +45,7 @@
 		error,
 		refresh,
 	} = await useFetch('/accounts/getall', {
-		initialCache: false,
+		lazy: true,
 		method: 'get',
 		headers: {
 			authorization: auth.user.token,
