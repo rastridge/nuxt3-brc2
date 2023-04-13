@@ -1,9 +1,9 @@
 import { useAuthStore } from '~~/stores/authStore'
 
 export const accountService = {
-	getAll,
-	getMemberTypes, // authorization
-	/* 	getOne,
+	/* 		getAll,
+getMemberTypes, // authorization
+getOne,
 	addOne,
 	editOne,
 	deleteOne,

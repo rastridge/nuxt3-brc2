@@ -5,15 +5,6 @@
 		</Head>
 		<common-header title="SMS List" />
 
-		<!-- 		<div class="text-center m-5">
-			<Button
-				class="p-button-sm"
-				label="Add SMS"
-				@click="navigateTo('/admin/sms/add')"
-			>
-			</Button>
-		</div>
- -->
 		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
 
 		<render-list

@@ -82,33 +82,6 @@
 	//
 	const emit = defineEmits(['submitted'])
 
-	/* 	const modules = [
-		// name: 'blotFormatter',
-		{ module: BlotFormatter, blotFormatter: {} },
-		// name: 'imageUploader',
-		{
-			module: ImageUploader,
-			options: {
-				upload: async (file) => {
-					const formData = new FormData()
-					formData.append('photo', file)
-
-					const res = await fetch('/images/upload', {
-						method: 'POST',
-						body: formData,
-						headers: {
-							authorization: auth.user.token,
-						},
-					})
-					const data = await res.json()
-					return data.url
-				},
-			},
-		},
-		// name: 'blotFormatter',
-		{ module: BlotFormatter, blotFormatter: {} },
-	] */
-
 	//
 	// raw html view
 	const peek = ref(false)

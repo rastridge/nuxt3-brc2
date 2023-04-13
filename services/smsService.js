@@ -6,16 +6,16 @@ const { doDBQuery } = useQuery()
 const { getConnection } = useDBConnection()
 
 export const smsService = {
-	getAll,
-	getYear,
-	sendSMS,
+	// getAll,
+	// getYear,
+	// sendSMS,
 	trackSMS,
-	getOne,
-	addOne,
-	editOne,
-	deleteOne,
-	changeStatus,
-	getRecipientTypes,
+	// getOne,
+	// addOne,
+	// editOne,
+	// deleteOne,
+	// changeStatus,
+	// getRecipientTypes,
 }
 
 async function getAll() {

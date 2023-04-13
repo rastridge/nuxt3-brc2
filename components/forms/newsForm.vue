@@ -33,14 +33,6 @@
 			/>
 
 			<h4>Content</h4>
-			<!-- <div class="editor m-1">
-				<quill-editor
-					contentType="html"
-					v-model:content="state.news_article"
-					toolbar="full"
-					:modules="modules"
-				></quill-editor>
-			</div> -->
 			<input-body
 				:field="state.news_article"
 				@changeState="changeState"
@@ -73,9 +65,6 @@
 
 <script setup>
 	import '@formkit/themes/genesis'
-	// import { QuillEditor } from '@vueup/vue-quill'
-	// import ImageUploader from 'quill-image-uploader'
-	// import BlotFormatter from 'quill-blot-formatter'
 	import { useAuthStore } from '~~/stores/authStore'
 	const auth = useAuthStore()
 
@@ -147,35 +136,6 @@
 			'YYYY-MM-DD HH:mm'
 		)
 	}
-	//
-	// quill modules
-	//
-	/* 	const modules = [
-		{
-			name: 'blotFormatter',
-			module: BlotFormatter,
-			blotFormatter: {},
-		},
-		{
-			module: ImageUploader,
-			options: {
-				upload: async (file) => {
-					const formData = new FormData()
-					formData.append('photo', file)
-
-					const res = await fetch('/images/upload', {
-						method: 'POST',
-						body: formData,
-						headers: {
-							authorization: auth.user.token,
-						},
-					})
-					const data = await res.json()
-					return data.url
-				},
-			},
-		},
-	] */
 	//
 	// form handlers
 	//

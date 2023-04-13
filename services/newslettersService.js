@@ -13,16 +13,16 @@ const {
 } = useRuntimeConfig()
 
 export const newslettersService = {
-	getAll,
+	// getAll,
 	getYear,
-	sendNewsletter,
+	// sendNewsletter,
 	trackNewsletter,
-	getOne,
-	addOne,
-	editOne,
-	deleteOne,
-	changeStatus,
-	getRecipientTypes,
+	// getOne,
+	// addOne,
+	// editOne,
+	// // deleteOne,
+	// changeStatus,
+	// getRecipientTypes,
 }
 
 async function getAll() {

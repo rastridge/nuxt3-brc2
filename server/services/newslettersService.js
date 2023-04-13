@@ -17,7 +17,7 @@ const { getConnection } = useDBConnection()
 
 export const newslettersService = {
 	getAll,
-	getYear,
+	// getYear,
 	sendNewsletter,
 	trackNewsletter,
 	getOne,

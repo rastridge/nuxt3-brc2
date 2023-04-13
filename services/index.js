@@ -1,5 +1,5 @@
-export * from './accounts.service'
-/* export * from './contribution.service'
+/* export * from './accounts.service'
+export * from './contribution.service'
 export * from './newsletter.service'
 export * from './news.service'
 export * from './image.service'

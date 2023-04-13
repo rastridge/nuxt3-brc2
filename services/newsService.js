@@ -18,13 +18,13 @@ async function doDBQuery(sql, inserts) {
 }
 
 export const newsService = {
-	getAll,
-	getOne,
-	addOne,
-	editOne,
-	deleteOne,
-	changeStatus,
-	getAllCurrent,
+	// getAll,
+	// getOne,
+	// addOne,
+	// editOne,
+	// deleteOne,
+	// changeStatus,
+	// getAllCurrent,
 }
 
 async function getAll() {

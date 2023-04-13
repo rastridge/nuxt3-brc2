@@ -84,7 +84,6 @@
 		error,
 		refresh,
 	} = await useFetch('/news/getallcurrent', {
-		initialCache: false,
 		method: 'get',
 		headers: {
 			authorization: 'not-needed',

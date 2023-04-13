@@ -58,14 +58,6 @@
 	state.value.sms_recipient_type_id = 13
 	state.value.admin_user_id = auth.user.admin_user_id
 
-	/* 	let state = reactive({
-		sms_recipient_type_id: 13,
-		sms_id: '',
-		admin_user_id: auth.user.admin_user_id,
-		sms_subject: '',
-		sms_body_text: '',
-	}) */
-
 	//
 	//
 	//
@@ -96,13 +88,6 @@
 		// additional
 		state.admin_user_id = auth.user.admin_user_id
 
-		/* 		state.newsletter_recipient_type_id = ''
-		state.sms_id = props.id
-		state.id = props.id
-		state.newsletter_subject = sms_data.value.newsletter_subject
-		state.newsletter_body_html = sms_data.value.newsletter_body_html
-		state.newsletter_body_text = sms_data.value.newsletter_body_text
- */
 		sms_opened_cnt.value = sms_data.value.sms_recp_cnt
 	}
 	//
