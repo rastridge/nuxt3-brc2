@@ -4,37 +4,25 @@
 			<Title>Images List</Title>
 		</Head>
 		<common-header title="Images List" />
-
-		<!-- Add Button -->
-		<!-- 			<div class="text-center m-5">
-			<Button
-				class="p-button-sm"
-				label="Add image"
-				@click="navigateTo('/admin/images/add')"
-			>
-			</Button>
+		<div v-if="pending" class="text-center text-2xl">Loading ...</div>
+		<div v-else>
+			<render-list
+				:data="images_data"
+				:app="app"
+				:statusable="statusable"
+				:editable="editable"
+				:deleteable="deleteable"
+				:addable="addable"
+				:viewable="viewable"
+				@changeStatus="changeStatus"
+				@deleteItem="deleteItem"
+			/>
 		</div>
-		-->
-
-		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
-
-		<render-list
-			:data="images_data"
-			:app="app"
-			:statusable="statusable"
-			:editable="editable"
-			:deleteable="deleteable"
-			:addable="addable"
-			:viewable="viewable"
-			@changeStatus="changeStatus"
-			@deleteItem="deleteItem"
-		/>
 	</div>
 </template>
 
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
-	const auth = useAuthStore()
+	const { getAll, deleteOne, changeStatusOne } = useFetchAll()
 
 	definePageMeta({ layout: 'admin' })
 
@@ -48,38 +36,15 @@
 	//
 	// Get all images
 	//
-	const {
-		data: images_data,
-		pending,
-		error,
-		refresh,
-	} = await useFetch('/images/getall', {
-		initialCache: false,
-		method: 'get',
-		headers: {
-			authorization: auth.user.token,
-		},
-	})
+	const { data: accounts, pending } = await getAll('images')
 
 	//
 	// Renderlist actions
 	//
 	const deleteItem = async (id) => {
-		const { pending, error, refresh } = await useFetch(`/images/${id}`, {
-			method: 'DELETE',
-			headers: {
-				authorization: auth.user.token,
-			},
-		})
+		await deleteOne('images', id)
 	}
-
 	const changeStatus = async ({ id, status }) => {
-		const { pending, error, refresh } = await useFetch(`/images/status`, {
-			method: 'POST',
-			headers: {
-				authorization: auth.user.token,
-			},
-			body: { id, status },
-		})
+		await changeStatusOne('images', { id, status })
 	}
 </script>

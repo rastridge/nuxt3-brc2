@@ -4,26 +4,25 @@
 			<Title>SMS List</Title>
 		</Head>
 		<common-header title="SMS List" />
-
-		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
-
-		<render-list
-			:data="sms_data"
-			:app="app"
-			:statusable="statusable"
-			:editable="editable"
-			:deleteable="deleteable"
-			:addable="addable"
-			:viewable="viewable"
-			@changeStatus="changeStatus"
-			@deleteItem="deleteItem"
-		/>
+		<div v-if="pending" class="text-center text-2xl">Loading ...</div>
+		<div v-else>
+			<render-list
+				:data="sms_data"
+				:app="app"
+				:statusable="statusable"
+				:editable="editable"
+				:deleteable="deleteable"
+				:addable="addable"
+				:viewable="viewable"
+				@changeStatus="changeStatus"
+				@deleteItem="deleteItem"
+			/>
+		</div>
 	</div>
 </template>
 
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
-	const auth = useAuthStore()
+	const { getAll, deleteOne, changeStatusOne } = useFetchAll()
 
 	definePageMeta({ layout: 'admin' })
 
@@ -34,38 +33,16 @@
 	//
 	// Get all sms
 	//
-	const {
-		data: sms_data,
-		pending,
-		error,
-		refresh,
-	} = await useFetch('/sms/getall', {
-		initialCache: false,
-		method: 'get',
-		headers: {
-			authorization: auth.user.token,
-		},
-	})
+	const { data: sms_data, pending } = await getAll('sms')
 
 	//
 	// Renderlist actions
 	//
 	const deleteItem = async (id) => {
-		const { pending, error, refresh } = await useFetch(`/sms/${id}`, {
-			method: 'DELETE',
-			headers: {
-				authorization: auth.user.token,
-			},
-		})
+		await deleteOne('sms', id)
 	}
 
 	const changeStatus = async ({ id, status }) => {
-		const { pending, error, refresh } = await useFetch(`/sms/status`, {
-			method: 'POST',
-			headers: {
-				authorization: auth.user.token,
-			},
-			body: { id, status },
-		})
+		await changeStatusOne('sms', { id, status })
 	}
 </script>

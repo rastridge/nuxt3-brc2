@@ -5,34 +5,27 @@
 		</Head>
 		<common-header title="Users List" />
 
-		<!-- 		<div class="text-center m-5">
-			<Button
-				class="p-button-sm"
-				label="Add account"
-				@click="navigateTo('/admin/users/add')"
-			>
-			</Button>
+		<div v-if="pending" class="text-center text-2xl">Loading ...</div>
+		<div v-else>
+			<render-list
+				:data="users"
+				:app="app"
+				:statusable="statusable"
+				:editable="editable"
+				:deleteable="deleteable"
+				:addable="addable"
+				:viewable="viewable"
+				@changeStatus="changeStatus"
+				@deleteItem="deleteItem"
+			/>
 		</div>
- -->
-		<render-list
-			:data="users"
-			:app="app"
-			:statusable="statusable"
-			:editable="editable"
-			:deleteable="deleteable"
-			:addable="addable"
-			:viewable="viewable"
-			@changeStatus="changeStatus"
-			@deleteItem="deleteItem"
-		/>
 	</div>
 </template>
 
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
-	const auth = useAuthStore()
-
 	definePageMeta({ layout: 'admin' })
+
+	const { getAll, deleteOne, changeStatusOne } = useFetchAll()
 
 	//
 	// Initialize values for Renderlist
@@ -44,37 +37,15 @@
 	//
 	// Get all users
 	//
-	const {
-		data: users,
-		pending,
-		error,
-		refresh,
-	} = await useFetch('/users/getall', {
-		initialCache: false,
-		method: 'get',
-		headers: {
-			authorization: auth.user.token,
-		},
-	})
+	const { data: users, pending } = await getAll('users')
+
 	//
 	// Renderlist actions
 	//
 	const deleteItem = async (id) => {
-		const { pending, error, refresh } = await useFetch(`/users/${id}`, {
-			method: 'delete',
-			headers: {
-				authorization: auth.user.token,
-			},
-		})
+		await deleteOne('users', id)
 	}
-
 	const changeStatus = async ({ id, status }) => {
-		const { pending, error, refresh } = await useFetch(`/users/status`, {
-			method: 'POST',
-			headers: {
-				authorization: auth.user.token,
-			},
-			body: { id, status },
-		})
+		await changeStatusOne('users', { id, status })
 	}
 </script>

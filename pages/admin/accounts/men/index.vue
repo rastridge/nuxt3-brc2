@@ -22,8 +22,6 @@
 </template>
 
 <script setup>
-	// import { useAuthStore } from '~~/stores/authStore'
-	// const auth = useAuthStore()
 	const { getAll, deleteOne, changeStatusOne } = useFetchAll()
 
 	definePageMeta({ layout: 'admin' })
@@ -39,45 +37,14 @@
 	// Get all accounts
 	//
 	const { data: accounts, pending } = await getAll('accounts')
-
-	/* const {
-		data: accounts,
-		pending,
-		error,
-		refresh,
-	} = await useFetch('/accounts/getall', {
-		lazy: true,
-		method: 'get',
-		headers: {
-			authorization: auth.user.token,
-			// authorization: 'not-needed',
-		},
-	}) */
-
 	//
 	// Renderlist actions
 	//
 	const deleteItem = async (id) => {
 		await deleteOne('accounts', id)
 	}
-	/* const deleteItem = async (id) => {
-		const { pending, error, refresh } = await useFetch(`/accounts/${id}`, {
-			method: 'delete',
-			headers: {
-				authorization: auth.user.token,
-			},
-		})
-	} */
+
 	const changeStatus = async ({ id, status }) => {
 		await changeStatusOne('accounts', { id, status })
 	}
-	/* const changeStatus = async ({ id, status }) => {
-		const { pending, error, refresh } = await useFetch(`/accounts/status`, {
-			method: 'POST',
-			headers: {
-				authorization: auth.user.token,
-			},
-			body: { id, status },
-		})
-	} */
 </script>

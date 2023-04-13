@@ -13,7 +13,7 @@ export default function useFetchAll() {
 		if (error.value) {
 			throw createError({
 				...error.value,
-				statusMessage: `Could not get data from /${app}/getAll`,
+				statusMessage: `Could not get data from /${app}/getall`,
 			})
 		}
 		return { data, pending }
