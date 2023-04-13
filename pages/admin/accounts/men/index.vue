@@ -5,7 +5,6 @@
 		</Head>
 		<common-header title="Account List" />
 		<div v-if="pending" class="text-center text-2xl">Loading ...</div>
-
 		<div v-else>
 			<render-list
 				:data="accounts"
@@ -23,8 +22,9 @@
 </template>
 
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
-	const auth = useAuthStore()
+	// import { useAuthStore } from '~~/stores/authStore'
+	// const auth = useAuthStore()
+	const { getAll, deleteOne, changeStatusOne } = useFetchAll()
 
 	definePageMeta({ layout: 'admin' })
 
@@ -32,14 +32,15 @@
 	// Initialize values for Renderlist
 	//
 	const { getAccess } = useRenderListAccess()
-
 	const app = 'accounts/men'
 	const { editable, addable, deleteable, statusable, viewable } = getAccess(app)
 
 	//
 	// Get all accounts
 	//
-	const {
+	const { data: accounts, pending } = await getAll('accounts')
+
+	/* const {
 		data: accounts,
 		pending,
 		error,
@@ -51,20 +52,26 @@
 			authorization: auth.user.token,
 			// authorization: 'not-needed',
 		},
-	})
+	}) */
+
 	//
 	// Renderlist actions
 	//
 	const deleteItem = async (id) => {
+		await deleteOne('accounts', id)
+	}
+	/* const deleteItem = async (id) => {
 		const { pending, error, refresh } = await useFetch(`/accounts/${id}`, {
 			method: 'delete',
 			headers: {
 				authorization: auth.user.token,
 			},
 		})
-	}
-
+	} */
 	const changeStatus = async ({ id, status }) => {
+		await changeStatusOne('accounts', { id, status })
+	}
+	/* const changeStatus = async ({ id, status }) => {
 		const { pending, error, refresh } = await useFetch(`/accounts/status`, {
 			method: 'POST',
 			headers: {
@@ -72,5 +79,5 @@
 			},
 			body: { id, status },
 		})
-	}
+	} */
 </script>

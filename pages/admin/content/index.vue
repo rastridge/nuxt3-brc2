@@ -5,25 +5,27 @@
 		</Head>
 		<common-header title="Custom pages List" />
 
-		<span v-if="error" class="text-danger">ERROR: {{ error }}</span>
-
-		<render-list
-			:data="content_data"
-			:app="app"
-			:statusable="statusable"
-			:editable="editable"
-			:deleteable="deleteable"
-			:addable="addable"
-			:viewable="viewable"
-			@changeStatus="changeStatus"
-			@deleteItem="deleteItem"
-		/>
+		<div v-if="pending" class="text-center text-2xl">Loading ...</div>
+		<div v-else>
+			<render-list
+				:data="content_data"
+				:app="app"
+				:statusable="statusable"
+				:editable="editable"
+				:deleteable="deleteable"
+				:addable="addable"
+				:viewable="viewable"
+				@changeStatus="changeStatus"
+				@deleteItem="deleteItem"
+			/>
+		</div>
 	</div>
 </template>
 
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
-	const auth = useAuthStore()
+	// import { useAuthStore } from '~~/stores/authStore'
+	// const auth = useAuthStore()
+	const { getAll, deleteOne, changeStatusOne } = useFetchAll()
 
 	definePageMeta({ layout: 'admin' })
 
@@ -37,7 +39,10 @@
 	//
 	// Get all news
 	//
-	const {
+
+	const { data: content_data, pending } = await getAll('content')
+
+	/* const {
 		data: content_data,
 		pending,
 		error,
@@ -48,21 +53,26 @@
 		headers: {
 			authorization: auth.user.token,
 		},
-	})
+	}) */
 
 	//
 	// Renderlist actions
 	//
 	const deleteItem = async (id) => {
+		await deleteOne('content', id)
+	}
+	/* const deleteItem = async (id) => {
 		const { pending, error, refresh } = await useFetch(`/content/${id}`, {
 			method: 'DELETE',
 			headers: {
 				authorization: auth.user.token,
 			},
 		})
-	}
-
+	} */
 	const changeStatus = async ({ id, status }) => {
+		await changeStatusOne('content', { id, status })
+	}
+	/* const changeStatus = async ({ id, status }) => {
 		const { pending, error, refresh } = await useFetch(`/content/status`, {
 			method: 'POST',
 			headers: {
@@ -70,5 +80,5 @@
 			},
 			body: { id, status },
 		})
-	}
+	} */
 </script>
