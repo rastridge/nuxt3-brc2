@@ -5,9 +5,6 @@
 		</Head>
 		<common-header title="Edit users" />
 
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 		<p v-if="saving" class="text-center text-2xl">Saving ...</p>
 		<div v-else>
 			<user-form :id="id" @submitted="onSubmit" />
@@ -16,25 +13,32 @@
 </template>
 
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
+	// import { useAuthStore } from '~~/stores/authStore'
 	import { useAlertStore } from '~~/stores/alertStore'
 	const alert = useAlertStore()
-	const auth = useAuthStore()
+	// const auth = useAuthStore()
+	const { onSubmitEdit } = useSubmit()
 
 	definePageMeta({ layout: 'admin' })
+	const saving = ref(false)
 	//
 	// Get user id
 	//
 	const route = useRoute()
 	const id = ref(route.params.id)
-	const saving = ref(false)
 
 	//
 	// Users form action
 	//
 	const onSubmit = function (form_state) {
-		const { data, pending, error } = useFetch('/users/editone', {
-			lazy: true,
+		saving.value = true
+		onSubmitEdit('users', form_state)
+		saving.value = false
+		navigateTo(`/admin/users`)
+	}
+	/* 	const onSubmit = function (form_state) {
+		saving.value = true
+		const { data, pending, error } = useLazyFetch('/users/editone', {
 			method: 'post',
 			body: form_state,
 			headers: {
@@ -42,10 +46,13 @@
 			},
 		})
 		saving.value = pending.value
-		if (data.value.message) {
-			alert.error(data.value.message)
+		if (error.value) {
+			throw createError({
+				...error.value,
+				statusMessage: `Could not get data from /users/editone`,
+			})
 		} else {
 			navigateTo('/admin/users')
 		}
-	}
+	} */
 </script>

@@ -1,15 +1,23 @@
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
+	// import { useAuthStore } from '~~/stores/authStore'
 	import { useAlertStore } from '~~/stores/alertStore'
 	const alert = useAlertStore()
-	const auth = useAuthStore()
+	// const auth = useAuthStore()
+	const { onSubmitAdd } = useSubmit()
 
 	definePageMeta({ layout: 'admin' })
+	const saving = ref(false)
 
 	//
 	// News form action
 	//
-	const onSubmit = async function (state) {
+	const onSubmit = function (form_state) {
+		saving.value = true
+		onSubmitAdd('news', form_state)
+		saving.value = false
+		navigateTo(`/admin/news`)
+	}
+	/* 	const onSubmit = async function (state) {
 		const { data, pending, error } = await useFetch('/news/addone', {
 			method: 'post',
 			body: state,
@@ -22,7 +30,7 @@
 		} else {
 			navigateTo('/admin/news')
 		}
-	}
+	} */
 </script>
 
 <template>

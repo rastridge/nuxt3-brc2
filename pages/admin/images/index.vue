@@ -36,7 +36,7 @@
 	//
 	// Get all images
 	//
-	const { data: accounts, pending } = await getAll('images')
+	const { data: images_data, pending } = await getAll('images')
 
 	//
 	// Renderlist actions

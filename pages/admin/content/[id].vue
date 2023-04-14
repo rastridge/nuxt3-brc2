@@ -1,10 +1,12 @@
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
+	// import { useAuthStore } from '~~/stores/authStore'
 	import { useAlertStore } from '~~/stores/alertStore'
 	const alert = useAlertStore()
-	const auth = useAuthStore()
+	// const auth = useAuthStore()
+	const { onSubmitEdit } = useSubmit()
 
 	definePageMeta({ layout: 'admin' })
+	const saving = ref(false)
 
 	//
 	// Get content item id
@@ -15,7 +17,13 @@
 	//
 	// content form action
 	//
-	const onSubmit = async function (state) {
+	const onSubmit = function (form_state) {
+		saving.value = true
+		onSubmitEdit('content', form_state)
+		saving.value = false
+		navigateTo(`/admin/content`)
+	}
+	/* 	const onSubmit = async function (state) {
 		const { data, pending, error } = await useFetch('/content/editone', {
 			method: 'post',
 			body: state,
@@ -28,7 +36,7 @@
 		} else {
 			navigateTo('/admin/content')
 		}
-	}
+	} */
 </script>
 
 <template>
