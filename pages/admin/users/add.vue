@@ -1,6 +1,6 @@
 <script setup>
-	// import { useAuthStore } from '~~/stores/authStore'
-	import { useAlertStore } from '~~/stores/alertStore'
+	// import { useAuthStore } from '~/stores/authStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 	// const auth = useAuthStore()
 	const { onSubmitAdd } = useSubmit()
@@ -39,14 +39,7 @@
 			<Title>Add User</Title>
 		</Head>
 		<common-header title="Add User" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 		<user-form @submitted="onSubmit" />
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 	</div>
 </template>
 

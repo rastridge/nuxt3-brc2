@@ -1,9 +1,9 @@
-import { useAuthStore } from '~~/stores/authStore'
-const auth = useAuthStore()
+import { useAuthStore } from '~/stores/authStore'
 
 export default function useFetchAll() {
+	const auth = useAuthStore()
 	const getAll = async (app) => {
-		const { data, error, pending } = await useFetch(`/${app}/getall`, {
+		const { data, error } = await useFetch(`/${app}/getall`, {
 			method: 'get',
 			headers: {
 				authorization: auth.user.token,
@@ -16,7 +16,7 @@ export default function useFetchAll() {
 				statusMessage: `Could not get data from /${app}/getall`,
 			})
 		}
-		return { data, pending }
+		return { data }
 	}
 
 	const deleteOne = async (app, id) => {

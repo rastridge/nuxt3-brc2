@@ -13,8 +13,8 @@
 </template>
 
 <script setup>
-	// import { useAuthStore } from '~~/stores/authStore'
-	import { useAlertStore } from '~~/stores/alertStore'
+	// import { useAuthStore } from '~/stores/authStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 	// const auth = useAuthStore()
 	const { onSubmitEdit } = useSubmit()

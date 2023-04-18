@@ -2,7 +2,7 @@
 	import { QuillEditor } from '@vueup/vue-quill'
 	import ImageUploader from 'quill-image-uploader'
 	import '@vueup/vue-quill/dist/vue-quill.snow.css'
-	import { useAuthStore } from '~~/stores/authStore'
+	import { useAuthStore } from '~/stores/authStore'
 	const auth = useAuthStore()
 
 	definePageMeta({ layout: 'admin' })

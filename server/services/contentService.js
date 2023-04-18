@@ -104,6 +104,7 @@ async function getOne(id) {
 }
 
 async function editOne(item) {
+	console.log('item = ', item)
 	let sql = `UPDATE inbrc_content
 							SET
 								content_name = ?,
@@ -123,14 +124,13 @@ async function editOne(item) {
 		item.content_expire_dt,
 		item.id
 	)
-	// activityLog('contentservice','inserts= ', inserts)
-
 	const content = await doDBQuery(sql, inserts)
-
 	return content
 }
 
 async function addOne(item) {
+	console.log('IN addOne item = ', item)
+
 	let sql = `INSERT INTO inbrc_content
 				SET
 				content_name = ?,
@@ -151,8 +151,8 @@ async function addOne(item) {
 		item.content_release_dt,
 		item.content_expire_dt
 	)
-	const content = await doDBQuery(sql, inserts)
 
+	const content = await doDBQuery(sql, inserts)
 	return content
 }
 

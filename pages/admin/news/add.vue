@@ -1,6 +1,6 @@
 <script setup>
-	// import { useAuthStore } from '~~/stores/authStore'
-	import { useAlertStore } from '~~/stores/alertStore'
+	// import { useAuthStore } from '~/stores/authStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 	// const auth = useAuthStore()
 	const { onSubmitAdd } = useSubmit()
@@ -13,8 +13,8 @@
 	//
 	const onSubmit = function (form_state) {
 		saving.value = true
-		onSubmitAdd('news', form_state)
-		saving.value = false
+		saving.value = onSubmitAdd('news', form_state)
+		// saving.value = false
 		navigateTo(`/admin/news`)
 	}
 	/* 	const onSubmit = async function (state) {
@@ -39,16 +39,7 @@
 			<Title>Add News Item</Title>
 		</Head>
 		<common-header title="Add News item" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
-
 		<news-form @submitted="onSubmit" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 	</div>
 </template>
 

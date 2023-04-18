@@ -1,4 +1,4 @@
-import { accountsService } from '~~/server/services/accountsService'
+import { accountsService } from '~/server/services/accountsService'
 
 export default defineEventHandler(async (event) => {
 	const runtimeConfig = useRuntimeConfig()

@@ -1,5 +1,5 @@
-import { useAlertStore } from '~~/stores/alertStore'
-import { useAuthStore } from '~~/stores/authStore'
+import { useAlertStore } from '~/stores/alertStore'
+import { useAuthStore } from '~/stores/authStore'
 
 export default defineNuxtRouteMiddleware((from, to) => {
 	const alert = useAlertStore() // this must be inside the function

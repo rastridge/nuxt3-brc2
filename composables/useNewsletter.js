@@ -1,7 +1,7 @@
-import { useAuthStore } from '~~/stores/authStore'
-const auth = useAuthStore()
+import { useAuthStore } from '~/stores/authStore'
 
 export const useAddNewsletter = async (state, send) => {
+	const auth = useAuthStore()
 	const { data, pending, error } = await useFetch('/newsletters/addone', {
 		method: 'post',
 		body: state,

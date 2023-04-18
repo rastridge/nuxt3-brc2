@@ -92,7 +92,7 @@
 </script>
 
 <style>
-	@import '~~/assets/css/quill-adjust.css';
+	@import '~/assets/css/quill-adjust.css';
 	.p-dialog {
 		background-color: gray;
 	}

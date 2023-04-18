@@ -1,6 +1,6 @@
 <script setup>
 	import Swal from 'sweetalert2'
-	import { useAlertStore } from '~~/stores/alertStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 
 	definePageMeta({ layout: 'admin' })
@@ -39,17 +39,8 @@
 			<Title>Add Newsletter</Title>
 		</Head>
 		<common-header title="Add Newsletter" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
-
 		<newsletters-form @submitted="onSubmit" />
 		<!-- <newsletters-form @submitted="onSendSave" /> -->
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 	</div>
 </template>
 

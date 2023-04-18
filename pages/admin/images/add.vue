@@ -1,6 +1,6 @@
 <script setup>
-	// import { useAuthStore } from '~~/stores/authStore'
-	import { useAlertStore } from '~~/stores/alertStore'
+	// import { useAuthStore } from '~/stores/authStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 	// const auth = useAuthStore()
 	const { onSubmitAdd } = useSubmit()
@@ -39,15 +39,6 @@
 			<Title>Add Image</Title>
 		</Head>
 		<common-header title="Add Image" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
-
 		<images-form @submitted="onSubmit" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 	</div>
 </template>

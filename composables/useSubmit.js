@@ -1,7 +1,7 @@
-import { useAuthStore } from '~~/stores/authStore'
-const auth = useAuthStore()
+import { useAuthStore } from '~/stores/authStore'
 
 export default function useSubmit() {
+	const auth = useAuthStore()
 	const onSubmitEdit = function (app, form_state) {
 		// saving.value = true
 		const { data, pending, error } = useLazyFetch(`/${app}/editone`, {
@@ -17,14 +17,13 @@ export default function useSubmit() {
 				...error.value,
 				statusMessage: `Could not submit data to /${app}/editone`,
 			})
+		} else {
+			navigateTo(`/admin/${app}`)
 		}
-		// } else {
-		// 	navigateTo(`/admin/${app}`)
-		// }
 	}
 	const onSubmitAdd = function (app, form_state) {
-		// saving.value = true
-		const { data, pending, error } = useLazyFetch(`/${app}/addone`, {
+		// console.log('form_state = ', form_state)
+		const { error } = useFetch(`/${app}/addone`, {
 			method: 'post',
 			body: form_state,
 			headers: {
@@ -35,12 +34,11 @@ export default function useSubmit() {
 		if (error.value) {
 			throw createError({
 				...error.value,
-				statusMessage: `Could not submit data to /${app}/addone`,
+				statusMessage: `Error submitting data to /${app}/addone`,
 			})
+		} else {
+			navigateTo(`/admin/${app}`)
 		}
-		// } else {
-		// 	navigateTo(`/admin/${app}`)
-		// }
 	}
 	return { onSubmitEdit, onSubmitAdd }
 }

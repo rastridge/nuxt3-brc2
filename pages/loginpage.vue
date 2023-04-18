@@ -49,8 +49,8 @@
 <script setup>
 	import '@formkit/themes/genesis'
 
-	import { useAuthStore } from '~~/stores/authStore'
-	import { useAlertStore } from '~~/stores/alertStore'
+	import { useAuthStore } from '~/stores/authStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const auth = useAuthStore()
 	const alert = useAlertStore() // used in template
 	definePageMeta({ layout: 'default' })

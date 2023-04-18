@@ -11,8 +11,9 @@
 			<FormKit
 				type="form"
 				v-model="state"
+				#default="{ state }"
 				submit-label="Submit"
-				@submit="submitForm(state)"
+				@submit="submitForm"
 			>
 				<FormKit
 					label="First Name"
@@ -56,24 +57,12 @@
 					name="account_addr_city"
 					validation="required"
 				/>
-				<!-- <FormKit
-					type="text"
-					label="State"
-					name="account_addr_state"
-					validation="required"
-				/>
- -->
-				<!-- <FormKit
-					type="text"
-					label="Country"
-					name="account_addr_country"
-					validation="required"
-				/> -->
 
-				<!-- 				<FormKit
+				<FormKit
 					type="select"
 					label="Country"
 					name="account_addr_country"
+					id="account_addr_country"
 					:options="justCountries"
 					validation="required"
 				/>
@@ -82,16 +71,12 @@
 					type="select"
 					label="Region"
 					name="account_addr_state"
+					id="account_addr_state"
 					:options="justRegions"
 					validation="required"
-				/> -->
-				<input-country-region
-					:fields="location"
-					@changeLocation="changeLocation"
 				/>
-				<br />IN accts form state.account_addr_country =
-				{{ state.account_addr_country }}<br />
-				state.account_addr_state = {{ state.account_addr_state }}
+				<!-- //////////////////////////////////// -->
+
 				<FormKit
 					type="text"
 					label="Postal Code"
@@ -171,19 +156,25 @@
 					:options="memberAdminTypeOptions"
 					validation="required"
 				/>
+				countryNode = {{ countryNode }}
 			</FormKit>
 			<div class="mb-3">
 				<Button @click.prevent="cancelForm()"> Cancel </Button>
 			</div>
+			countryNode = {{ countryNode }} <br />state.account_addr_state =
+			{{ state.account_addr_state }}<br />
+			state.account_addr_country = {{ state.account_addr_country }}<br />
 		</div>
 	</div>
 </template>
 
 <script setup>
+	import { allCountries } from 'country-region-data'
+	import { getNode } from '@formkit/core'
 	import { VueTelInput } from 'vue-tel-input'
 	import 'vue-tel-input/dist/vue-tel-input.css'
 	import '@formkit/themes/genesis'
-	import { useAuthStore } from '~~/stores/authStore'
+	import { useAuthStore } from '~/stores/authStore'
 	const auth = useAuthStore()
 	const { $dayjs } = useNuxtApp()
 
@@ -212,12 +203,6 @@
 	state.value.sms_recipient = '1'
 
 	//
-	// Prop for country-region input
-	const location = ref({})
-	location.value.account_addr_state = state.value.account_addr_state
-	location.value.account_addr_country = state.value.account_addr_country
-
-	//
 	// edit if there is an id - add if not
 	//
 	if (props.id !== 0) {
@@ -238,7 +223,30 @@
 		})
 		state.value = formdata.value
 	}
+	//
+	// get regions for country
+	//
+	const setRegions = (countrycode) => {
+		let regions = []
 
+		for (let i = 0; i < allCountries.length; i++) {
+			if (allCountries[i][1] === countrycode) {
+				// format justRegions for Formkit
+				regions = []
+				for (let k = 0; k < allCountries[i][2].length; k++) {
+					let n = {}
+					n.label = allCountries[i][2][k][0]
+					n.value = allCountries[i][2][k][1]
+					// console.log('n, i = ', n, i)
+					regions.push(n)
+				}
+				break
+			}
+		}
+		return regions
+	}
+	const justRegions = ref([])
+	justRegions.value = setRegions(state.value.account_addr_country)
 	//
 	// get member admin types for select
 	const { data: memberAdminTypes } = await useFetch(
@@ -288,16 +296,10 @@
 
 	//
 	// form handlers
-
-	const changeLocation = function (state) {
-		state.value.account_addr_country = state.account_addr_country
-		state.value.account_addr_state = state.account_addr_state
-	}
-
+	//
 	const submitForm = (state) => {
 		emit('submitted', state)
 	}
-
 	const cancelForm = () => {
 		navigateTo('/admin/accounts/men') // needs to be / for self register
 	}
@@ -328,6 +330,38 @@
 			showDialCode: true,
 		},
 	})
+
+	//
+	// FormKit stuff
+	//
+
+	// We add it inside a onMounted to make sure the node exists
+	onMounted(() => {
+		// Use the IDs of the inputs you want to get
+		const countryNode = getNode('account_addr_country')
+		const stateNode = getNode('account_addr_state')
+
+		// Here we are listening for the 'commit' event
+		countryNode.on('commit', ({ payload }) => {
+			// We update the value of the state
+			justRegions.value = setRegions(payload)
+			stateNode.input(justRegions.value[0].value)
+		})
+	})
+
+	// create options formatted for Formkit
+	const justCountries = ref([])
+
+	let countries = []
+	for (let i = 0; i < allCountries.length; i++) {
+		let n = {}
+		n.label = allCountries[i][0]
+		n.value = allCountries[i][1]
+		countries.push(n)
+	}
+	justCountries.value = countries
+
+	// get regions for country
 </script>
 
 <style scoped></style>

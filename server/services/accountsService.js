@@ -331,7 +331,7 @@ async function editOne(info) {
 
 				account_id
 			)
-			console.log('got here 4 inserts = ', inserts)
+			// console.log('got here 4 inserts = ', inserts)
 
 			sql = mysql.format(sql, inserts)
 

@@ -1,4 +1,4 @@
-import { contentService } from '~~/server/services/contentService'
+import { contentService } from '~/server/services/contentService'
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)

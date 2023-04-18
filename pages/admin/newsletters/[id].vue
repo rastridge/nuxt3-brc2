@@ -1,6 +1,6 @@
 <script setup>
 	import Swal from 'sweetalert2'
-	import { useAlertStore } from '~~/stores/alertStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 
 	definePageMeta({ layout: 'admin' })
@@ -41,10 +41,6 @@
 			<Title>Edit Newsletter {{ id }}</Title>
 		</Head>
 		<common-header title="Edit Newsletter" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 		<newsletters-form :id="id" @submitted="onSubmit" />
 	</div>
 </template>

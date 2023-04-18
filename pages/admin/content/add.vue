@@ -1,21 +1,20 @@
 <script setup>
-	// import { useAuthStore } from '~~/stores/authStore'
-	import { useAlertStore } from '~~/stores/alertStore'
+	import { useAuthStore } from '~/stores/authStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
-	// const auth = useAuthStore()
+	const auth = useAuthStore()
 	const { onSubmitAdd } = useSubmit()
 
 	definePageMeta({ layout: 'admin' })
 	const saving = ref(false)
-
+	const app = ref('content')
 	//
 	// News form action
 	//
 	const onSubmit = function (form_state) {
 		saving.value = true
-		onSubmitAdd('content', form_state)
-		saving.value = false
-		navigateTo(`/admin/content`)
+		onSubmitAdd(app.value, form_state)
+		// navigateTo(`/admin/content`)
 	}
 	/* 	const onSubmit = async function (state) {
 		const { data, pending, error } = await useFetch('/content/addone', {
@@ -25,7 +24,7 @@
 				authorization: auth.user.token,
 			},
 		})
-		if (data.value.message) {
+				if (data.value.message) {
 			alert.error(data.value.message)
 		} else {
 			navigateTo('/admin/content')
@@ -39,15 +38,6 @@
 			<Title>Add Custom page</Title>
 		</Head>
 		<common-header title="Add Custom page" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
-
 		<content-form @submitted="onSubmit" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 	</div>
 </template>

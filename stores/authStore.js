@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useAlertStore } from '~~/stores/alertStore'
+import { useAlertStore } from '~/stores/alertStore'
 
 export const useAuthStore = defineStore('auth', {
 	state: () => ({ status: { loggedIn: false }, user: {} }),

@@ -1,15 +1,7 @@
 <template>
 	<div class="register">
 		<common-header title="Register" />
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
-
 		<accounts-self-form @submitted="handleSubmit" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 
 		<!-- Modal Advise of non commitment on opening of form-->
 		<Dialog
@@ -37,7 +29,7 @@
 
 <script setup>
 	import Dialog from 'primevue/dialog'
-	import { useAlertStore } from '~~/stores/alertStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 	const { $dayjs } = useNuxtApp()
 	//

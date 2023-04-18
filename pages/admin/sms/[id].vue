@@ -1,6 +1,6 @@
 <script setup>
 	import Swal from 'sweetalert2'
-	import { useAlertStore } from '~~/stores/alertStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 
 	definePageMeta({ layout: 'admin' })
@@ -42,10 +42,6 @@
 			<Title>Edit SMS {{ id }}</Title>
 		</Head>
 		<common-header title="Edit SMS" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
 		<sms-form :id="id" @submitted="onSubmit" />
 	</div>
 </template>

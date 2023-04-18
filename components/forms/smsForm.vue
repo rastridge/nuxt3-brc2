@@ -38,7 +38,7 @@
 <script setup>
 	import '@formkit/themes/genesis'
 
-	import { useAuthStore } from '~~/stores/authStore'
+	import { useAuthStore } from '~/stores/authStore'
 	const auth = useAuthStore()
 	//
 	// Incoming id

@@ -1,0 +1,650 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  // url      = "mysql://rastridge:a1s2d3f4@mysql.buffalorugby.org/buffalorugby_testing"
+  url = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model inbrc_accounts {
+  id               Int       @id @default(autoincrement())  @map("account_id")
+  account_pass             String    @default("") @db.VarChar(32)
+  account_email            String    @default("") @db.VarChar(100)
+  account_email_opening    DateTime  @default(dbgenerated("'1970-01-01 00:00:01'")) @db.DateTime(0)
+  account_textmsg_opening  DateTime  @default(dbgenerated("'1970-01-01 00:00:01'")) @db.DateTime(0)
+  account_screenname       String    @default("") @db.VarChar(100)
+  last_login_ip            String    @default("") @db.VarChar(15)
+  last_login_host          String    @db.VarChar(100)
+  last_login_dt            DateTime  @db.DateTime(0)
+  STATUS                   Int       @default(1)
+  deleted                  Int       @default(0)
+  deleted_dt               DateTime  @default(dbgenerated("'1970-01-01 00:00:01'")) @db.DateTime(0)
+  created_dt               DateTime  @default(dbgenerated("'1970-01-01 00:00:01'")) @db.DateTime(0)
+  modified_dt              DateTime  @default(dbgenerated("'1970-01-01 00:00:01'")) @db.DateTime(0)
+  account_addr_street      String    @db.VarChar(100)
+  account_addr_street_ext  String    @db.VarChar(100)
+  account_addr_city        String    @default("") @db.VarChar(100)
+  account_addr_state       String    @default("") @db.VarChar(100)
+  account_addr_country     String    @default("") @db.VarChar(100)
+  account_addr_postal      String    @default("") @db.VarChar(15)
+  account_addr_phone       String    @default("999-999-9999") @db.VarChar(20)
+  newsletter_recipient     Int       @default(1)
+  sms_recipient            Int       @default(1)
+  mail_recipient           Int       @default(0)
+  newsletter_format        String    @default("HTML") @db.VarChar(50)
+  member_firstname         String    @db.VarChar(50)
+  member_lastname          String    @db.VarChar(50)
+  member_dob               DateTime? @default(dbgenerated("'1970-01-01'")) @db.Date
+  member_nickname          String?   @db.VarChar(50)
+  member_position          String?   @default("") @db.VarChar(50)
+  member_year              String    @db.VarChar(4)
+  member_prev_club         String?   @db.VarChar(50)
+  member_show_addr         Boolean   @default(false)
+  member_show_phone        Boolean   @default(true)
+  member_admin_type_id     Int       @default(0)
+  member_admin_type2_id    Int?
+  member_type_id           Int       @default(99)
+  member_type2_id          Int?
+  member_wall_of_fame_year String    @db.VarChar(4)
+  member_pic_path          String    @default("") @db.VarChar(255)
+  member_gender            String?   @default("m") @db.VarChar(1)
+  member_guardian          String?   @db.VarChar(100)
+  flag_legal               Int?      @default(1)
+  flag_photo               Int?      @default(1)
+}
+
+model inbrc_accounts_play {
+  account_id       Int      @id @default(autoincrement())
+  account_email    String   @default("") @db.VarChar(100)
+  STATUS           Int      @default(1)
+  deleted          Int      @default(0)
+  deleted_dt       DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt       DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt      DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  member_firstname String   @db.VarChar(50)
+  member_lastname  String   @db.VarChar(50)
+  comment          String   @db.VarChar(255)
+  member_pic_path  String   @default("") @db.VarChar(255)
+}
+
+model inbrc_admin_apps {
+  admin_app_id   Int    @id @default(autoincrement())
+  admin_app_name String @default("") @db.VarChar(50)
+  admin_app_path String @default("") @db.VarChar(100)
+}
+
+model inbrc_admin_perms {
+  admin_perm_id Int @id @default(autoincrement())
+  admin_app_id  Int @default(0)
+  admin_user_id Int @default(0)
+  admin_perm    Int @default(1)
+}
+
+model inbrc_admin_users {
+  admin_user_id     Int       @id @default(autoincrement())
+  admin_user_name   String    @default("") @db.VarChar(50)
+  admin_user_pass   String    @default("") @db.VarChar(100)
+  admin_user_remind String    @default("") @db.VarChar(100)
+  admin_user_email  String    @default("") @db.VarChar(100)
+  last_login_ip     String?   @db.VarChar(15)
+  last_login_host   String?   @db.VarChar(100)
+  last_login_dt     DateTime? @db.DateTime(0)
+  STATUS            Int       @default(1)
+  deleted           Int?      @default(0)
+  deleted_dt        DateTime? @db.DateTime(0)
+  created_dt        DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt       DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([admin_user_name], map: "admin_user_name_ref")
+  @@index([admin_user_pass], map: "admin_user_pass_ref")
+}
+
+model inbrc_ads {
+  ad_id        Int       @id @default(autoincrement())
+  ad_client_id Int       @default(0)
+  ad_title     String    @default("") @db.VarChar(200)
+  ad_url       String    @default("") @db.VarChar(255)
+  ad_path      String    @default("") @db.VarChar(255)
+  STATUS       Int       @default(1)
+  deleted      Int       @default(0)
+  deleted_dt   DateTime? @db.DateTime(0)
+  created_dt   DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt  DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_ads_activity {
+  ad_activity_id    Int @id @default(autoincrement())
+  ad_id             Int @default(0)
+  ad_view_cnt       Int @default(0)
+  ad_click_cnt      Int @default(0)
+  ad_activity_month Int @default(0)
+  ad_activity_year  Int @default(0)
+
+  @@index([ad_id], map: "ad_id_rel")
+}
+
+model inbrc_ads_clients {
+  ad_client_id      Int       @id @default(autoincrement())
+  ad_client_name    String    @default("") @db.VarChar(100)
+  ad_client_contact String    @default("") @db.VarChar(100)
+  ad_client_email   String    @default("") @db.VarChar(100)
+  ad_client_phone   String?   @db.VarChar(20)
+  STATUS            Int       @default(1)
+  deleted           Int       @default(0)
+  deleted_dt        DateTime? @db.DateTime(0)
+  created_dt        DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt       DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_archive {
+  archive_id          Int      @id @default(autoincrement())
+  archive_title       String   @db.VarChar(50)
+  archive_description String   @db.VarChar(100)
+  archive_filepath    String   @db.VarChar(100)
+  archive_category    String   @db.VarChar(50)
+  archive_date        DateTime @db.DateTime(0)
+  status              Int      @db.TinyInt
+  deleted             Int      @db.TinyInt
+  deleted_dt          DateTime @db.DateTime(0)
+  created_dt          DateTime @db.DateTime(0)
+  modified_dt         DateTime @db.DateTime(0)
+}
+
+model inbrc_availability {
+  availability_id Int      @id @default(autoincrement())
+  game_id         Int
+  player_id       Int
+  availability    String   @db.VarChar(3)
+  created_dt      DateTime @db.DateTime(0)
+  modified_dt     DateTime @db.DateTime(0)
+}
+
+model inbrc_availability_2022_03_02 {
+  availability_id Int      @id @default(autoincrement())
+  game_id         Int
+  player_id       Int
+  availability    String   @db.VarChar(3)
+  created_dt      DateTime @db.DateTime(0)
+  modified_dt     DateTime @db.DateTime(0)
+
+  @@map("inbrc_availability_2022-03-02")
+}
+
+model inbrc_clubhouse {
+  clubhouse_id          Int      @id @default(autoincrement())
+  clubhouse_title       String   @db.VarChar(255)
+  clubhouse_description String   @db.VarChar(255)
+  clubhouse_filepath    String   @db.VarChar(100)
+  clubhouse_category    String   @db.VarChar(50)
+  clubhouse_owner       String   @db.VarChar(100)
+  clubhouse_date        Int      @default(1966)
+  status                Int      @db.TinyInt
+  deleted               Int      @db.TinyInt
+  deleted_dt            DateTime @db.DateTime(0)
+  created_dt            DateTime @db.DateTime(0)
+  modified_dt           DateTime @db.DateTime(0)
+}
+
+model inbrc_community_links {
+  community_link_id           Int      @id @default(autoincrement())
+  account_id                  Int      @default(0)
+  community_link_title        String   @db.VarChar(50)
+  community_link_organization String   @db.VarChar(50)
+  community_link_phone        String   @db.VarChar(17)
+  status                      Int      @default(1)
+  deleted                     Int      @default(0)
+  deleted_dt                  DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt                  DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt                 DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([account_id], map: "account_id_ref")
+}
+
+model inbrc_content {
+  content_id         Int      @id @default(autoincrement())
+  content_name       String   @default("") @db.VarChar(50)
+  content_body       String   @db.LongText
+  content_order      Int      @default(0)
+  status             Int      @default(1)
+  deleted            Int      @default(0)
+  deleted_dt         DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt         DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt        DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  content_release_dt DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  content_expire_dt  DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_contributions {
+  contribution_id         Int      @id @default(autoincrement())
+  account_id              Int      @default(0)
+  contribution_amount     Int
+  contribution_date       DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  contribution_comment    String   @db.Text
+  contribution_showName   Int      @default(1)
+  contribution_showAmount Int      @default(1)
+  Status                  Int      @default(1)
+  deleted                 Int      @default(0)
+  deleted_dt              DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt              DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt             DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([account_id], map: "account_id_ref")
+}
+
+model inbrc_images {
+  image_id    Int      @id @default(autoincrement())
+  title       String   @db.VarChar(100)
+  alt         String   @db.VarChar(100)
+  url         String   @db.VarChar(100)
+  description String   @db.VarChar(100)
+  gallery     Boolean
+  created_dt  DateTime @default(now()) @db.DateTime(0)
+  modified_dt DateTime @default(now()) @db.DateTime(0)
+  deleted_dt  DateTime @db.DateTime(0)
+  deleted     Boolean
+  status      Boolean
+}
+
+model inbrc_leaders {
+  leaders_year    Int      @id
+  president       String   @db.VarChar(50)
+  vice_president  String   @db.VarChar(50)
+  match_secretary String   @db.VarChar(50)
+  treasurer       String   @db.VarChar(50)
+  spring_captain  String   @db.VarChar(50)
+  fall_captain    String   @db.VarChar(50)
+  coach           String   @db.VarChar(50)
+  created_dt      DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt     DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_member_admin_types {
+  member_admin_type_id Int    @id
+  member_admin_type    String @default("") @db.VarChar(50)
+}
+
+model inbrc_member_types {
+  member_type_id Int      @id @default(autoincrement())
+  member_type    String   @default("") @db.VarChar(50)
+  Status         Int      @default(1)
+  created_dt     DateTime @db.DateTime(0)
+  modified_dt    DateTime @db.DateTime(0)
+}
+
+model inbrc_news {
+  news_id         Int       @id @default(autoincrement())
+  news_type_id    Int       @default(1)
+  news_title      String    @default("") @db.VarChar(255)
+  news_synop      String    @db.VarChar(255)
+  news_article    String    @db.Text
+  news_event_dt   DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  news_release_dt DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  news_expire_dt  DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  STATUS          Int       @default(1)
+  deleted         Int       @default(0)
+  deleted_dt      DateTime? @db.DateTime(0)
+  created_dt      DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt     DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([news_type_id], map: "news_type_rel")
+}
+
+model inbrc_news_testing {
+  news_id         Int       @id @default(autoincrement())
+  news_type_id    Int       @default(1)
+  news_title      String    @default("") @db.VarChar(255)
+  news_synop      String    @db.VarChar(255)
+  news_article    String    @db.Text
+  news_event_dt   DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  news_release_dt DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  news_expire_dt  DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  STATUS          Int       @default(1)
+  deleted         Int       @default(0)
+  deleted_dt      DateTime? @db.DateTime(0)
+  created_dt      DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt     DateTime  @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([news_type_id], map: "news_type_rel")
+}
+
+model inbrc_news_types {
+  news_type_id Int    @id @default(autoincrement())
+  news_type    String @default("") @db.VarChar(50)
+}
+
+model inbrc_newsletter_openings {
+  openings_id            Int      @id @default(autoincrement())
+  newsletter_id          Int
+  account_id             Int      @default(0)
+  account_email          String   @db.VarChar(50)
+  newsletter_subject     String   @default("") @db.VarChar(255)
+  newsletter_opened_date DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  status                 Int      @default(0)
+  deleted                Int      @default(0)
+}
+
+model inbrc_newsletter_recipient_types {
+  newsletter_recipient_type_id Int      @id @default(autoincrement())
+  newsletter_recipient_type    String   @default("") @db.VarChar(50)
+  Status                       Int      @default(1)
+  deleted                      Int      @default(0)
+  deleted_dt                   DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt                   DateTime @db.DateTime(0)
+  modified_dt                  DateTime @db.DateTime(0)
+}
+
+model inbrc_newsletters {
+  newsletter_id                Int      @id @default(autoincrement())
+  admin_user_id                Int      @default(0)
+  newsletter_member_type_id    Int      @default(0)
+  newsletter_recipient_type_id Int      @default(0)
+  newsletter_subject           String   @default("") @db.VarChar(255)
+  newsletter_body_text         String   @default("\"\"") @db.VarChar(100)
+  newsletter_body_html         String   @db.Text
+  newsletter_send              DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  newsletter_sent              DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  newsletter_send_complete     DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  newsletter_recp_cnt          Int      @default(0)
+  newsletter_opened_cnt        Int      @default(0)
+  newsletter_send_status       Int      @default(0)
+  status                       Int      @default(0)
+  deleted                      Int      @default(0)
+  deleted_dt                   DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt                   DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt                  DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([admin_user_id], map: "admin_user_id")
+}
+
+model inbrc_opponents {
+  opponent_id          Int      @id @default(autoincrement())
+  opponent_name        String   @db.VarChar(100)
+  opponent_description String   @db.VarChar(100)
+  opponent_level       String   @db.VarChar(10)
+  opponent_location    String   @db.VarChar(100)
+  opponent_type        String   @db.VarChar(50)
+  status               Int      @db.TinyInt
+  deleted              Int      @db.TinyInt
+  deleted_dt           DateTime @db.DateTime(0)
+  created_dt           DateTime @db.DateTime(0)
+  modified_dt          DateTime @db.DateTime(0)
+}
+
+model inbrc_payments {
+  payment_id            Int      @id @default(autoincrement())
+  payment_title         String   @default("") @db.VarChar(100)
+  payment_description   String   @db.LongText
+  payment_paypal_button String   @db.LongText
+  release_dt            DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  expire_dt             DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  status                Int      @default(1)
+  deleted               Int      @default(0)
+  deleted_dt            DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt            DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt           DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_resume {
+  resume_id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  account_id        Int
+  job_type          String   @db.Text
+  resume_text       String   @db.Text
+  resume_release_dt DateTime @db.DateTime(0)
+  resume_expire_dt  DateTime @db.DateTime(0)
+  STATUS            Int      @default(1) @db.UnsignedInt
+  created_dt        DateTime @db.Timestamp(0)
+  modified_dt       DateTime @db.Timestamp(0)
+}
+
+model inbrc_sms {
+  sms_id                Int      @id @default(autoincrement())
+  admin_user_id         Int      @default(0)
+  sms_member_type_id    Int      @default(0)
+  sms_recipient_type_id Int      @default(0)
+  sms_subject           String   @db.VarChar(255)
+  sms_body_text         String   @db.Text
+  sms_sent              DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  sms_send_complete     DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  sms_recp_cnt          Int      @default(0)
+  sms_err_cnt           Int      @default(0)
+  sms_send_status       Int      @default(0)
+  status                Int      @default(0)
+  deleted               Int      @default(0)
+  deleted_dt            DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt            DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt           DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([admin_user_id], map: "admin_user_id")
+}
+
+model inbrc_sponsors {
+  ad_client_id      Int      @id @default(autoincrement())
+  ad_client_name    String   @default("") @db.VarChar(100)
+  ad_client_contact String   @default("") @db.VarChar(100)
+  ad_client_email   String   @default("") @db.VarChar(100)
+  ad_client_phone   String   @db.VarChar(20)
+  ad_client_website String   @db.VarChar(100)
+  ad_image_path     String   @db.VarChar(100)
+  STATUS            Int      @default(1)
+  deleted           Int      @default(0)
+  deleted_dt        DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt        DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt       DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_stats_game_types {
+  game_type_id Int    @id @default(autoincrement())
+  game_type    String @default("") @db.VarChar(50)
+}
+
+model inbrc_stats_games {
+  game_id       Int                           @id @unique(map: "game_id") @default(autoincrement())
+  opponent_id   Int
+  referee       String                        @default("") @db.VarChar(100)
+  venue         String                        @default("") @db.VarChar(100)
+  comment       String                        @default("") @db.VarChar(255)
+  date          DateTime                      @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  game_type_id  Int?
+  game_level    inbrc_stats_games_game_level?
+  occasion      String                        @db.VarChar(100)
+  ptsFor        Int?
+  ptsAgn        Int?
+  result        String                        @db.VarChar(10)
+  game_pic_path String                        @db.VarChar(100)
+  STATUS        Int                           @default(1)
+  deleted       Int?                          @default(0)
+  deleted_dt    DateTime                      @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt    DateTime                      @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt   DateTime                      @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_stats_games_2022_02_06 {
+  game_id       Int                                      @id @unique(map: "game_id") @default(autoincrement())
+  opponent      String                                   @default("") @db.VarChar(100)
+  opponent_id   Int
+  referee       String                                   @default("") @db.VarChar(100)
+  venue         String                                   @default("") @db.VarChar(100)
+  comment       String                                   @default("") @db.VarChar(255)
+  date          DateTime                                 @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  game_type_id  Int?
+  game_level    inbrc_stats_games_2022_02_06_game_level?
+  occasion      String                                   @db.VarChar(100)
+  ptsFor        Int?
+  ptsAgn        Int?
+  result        String                                   @db.VarChar(10)
+  game_pic_path String                                   @db.VarChar(100)
+  STATUS        Int                                      @default(1)
+  deleted       Int?                                     @default(0)
+  deleted_dt    DateTime                                 @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt    DateTime                                 @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt   DateTime                                 @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@map("inbrc_stats_games_2022-02-06")
+}
+
+model inbrc_stats_player {
+  scoring_id  Int      @id @default(autoincrement())
+  position_id Int      @default(0)
+  player_id   Int      @default(0)
+  game_id     Int      @default(0)
+  replaced_by Int      @default(0)
+  tries       Int?     @default(0)
+  assists     Int?     @default(0)
+  conv        Int?     @default(0)
+  penk        Int?     @default(0)
+  dgoal       Int?     @default(0)
+  yellow      Int?     @default(0)
+  red         Int?     @default(0)
+  STATUS      Int      @default(1)
+  deleted     Int?     @default(0)
+  deleted_dt  DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt  DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([game_id], map: "game_id")
+  @@index([player_id], map: "player_id")
+}
+
+model inbrc_stats_player_2022_01_20 {
+  scoring_id  Int      @id @default(autoincrement())
+  position_id Int      @default(0)
+  player_id   Int      @default(0)
+  game_id     Int      @default(0)
+  replaced_by Int      @default(0)
+  tries       Int?     @default(0)
+  assists     Int?     @default(0)
+  conv        Int?     @default(0)
+  penk        Int?     @default(0)
+  dgoal       Int?     @default(0)
+  yellow      Int?     @default(0)
+  red         Int?     @default(0)
+  STATUS      Int      @default(1)
+  deleted     Int?     @default(0)
+  deleted_dt  DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt  DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([game_id], map: "game_id")
+  @@index([player_id], map: "player_id")
+}
+
+model inbrc_supportingaccts {
+  supportingApp_id          Int      @id @default(autoincrement())
+  supportingApp_name        String   @db.VarChar(100)
+  supportingApp_description String   @db.MediumText
+  supportingApp_url         String   @db.VarChar(200)
+  supportingApp_owner       String   @db.VarChar(100)
+  supportingApp_username    String   @db.VarChar(100)
+  supportingApp_password    String   @db.VarChar(100)
+  status                    Int      @default(1)
+  deleted                   Int      @default(0)
+  deleted_dt                DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt                DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt               DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_video {
+  video_id         Int      @id @default(autoincrement())
+  video_type_id    Int      @default(1)
+  video_title      String   @db.VarChar(255)
+  video_synop      String   @db.VarChar(255)
+  video_url        String   @db.Text
+  video_event_dt   DateTime @default(dbgenerated("'0000-00-00'")) @db.Date
+  video_release_dt DateTime @default(dbgenerated("'0000-00-00'")) @db.Date
+  video_expire_dt  DateTime @default(dbgenerated("'0000-00-00'")) @db.Date
+  STATUS           Int      @default(1)
+  deleted          Int      @default(0)
+  deleted_dt       DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt       DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt      DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@index([video_type_id], map: "news_type_rel")
+}
+
+model inbrc_video_types {
+  video_type_id Int    @id @default(autoincrement())
+  video_type    String @db.VarChar(50)
+}
+
+model inbrc_votes {
+  vote_question_id Int      @id @default(autoincrement())
+  vote_vote_cnt    Int      @default(0)
+  vote_question    String   @db.Text
+  STATUS           Int      @default(1)
+  deleted          Int      @default(0)
+  deleted_dt       DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt       DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt      DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+}
+
+model inbrc_votes_2022_01_26 {
+  vote_id       Int      @id @default(autoincrement())
+  vote_vote_cnt Int      @default(0)
+  vote_question String   @db.Text
+  STATUS        Int      @default(1)
+  deleted       Int      @default(0)
+  deleted_dt    DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  created_dt    DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+  modified_dt   DateTime @default(dbgenerated("'0000-00-00 00:00:00'")) @db.DateTime(0)
+
+  @@map("inbrc_votes_2022-01-26")
+}
+
+model inbrc_votes_answers_2022_01_26 {
+  vote_answer_id  Int    @id @default(autoincrement())
+  vote_id         Int    @default(0)
+  vote_answer     String @db.Text
+  vote_answer_cnt Int    @default(0)
+
+  @@index([vote_id], map: "poll_id_rel")
+  @@map("inbrc_votes_answers_2022-01-26")
+}
+
+model inbrc_votes_choices {
+  vote_choice_id   Int    @id @default(autoincrement())
+  vote_question_id Int    @default(0)
+  vote_choice      String @db.Text
+  vote_picked_cnt  Int    @default(0)
+
+  @@index([vote_question_id], map: "poll_id_rel")
+}
+
+model inbrc_votes_voted {
+  voted_voted_id   Int      @id @default(autoincrement())
+  vote_question_id Int
+  voted_email      String   @db.Text
+  vote_date        DateTime @db.DateTime(0)
+
+  @@index([vote_question_id], map: "poll_id_rel")
+}
+
+model inbrc_votes_voted_2022_01_26 {
+  voted_voted_id Int      @id @default(autoincrement())
+  vote_id        Int
+  voted_email    String   @db.Text
+  vote_date      DateTime @db.DateTime(0)
+
+  @@index([vote_id], map: "poll_id_rel")
+  @@map("inbrc_votes_voted_2022-01-26")
+}
+
+enum inbrc_stats_games_game_level {
+  // _ @map("_")
+  A
+  B
+  C
+  D
+}
+
+enum inbrc_stats_games_2022_02_06_game_level {
+  // _ @map("_")
+  A
+  B
+  C
+  D
+
+  @@map("inbrc_stats_games_2022-02-06_game_level")
+}

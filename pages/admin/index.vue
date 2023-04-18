@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-	import { useAuthStore } from '~~/stores/authStore'
+	import { useAuthStore } from '~/stores/authStore'
 	const auth = useAuthStore()
 	const sess = JSON.parse(sessionStorage.getItem('auth'))
 	definePageMeta({

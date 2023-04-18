@@ -3,19 +3,21 @@ const CONFIG = useRuntimeConfig()
 
 export default function useQuery() {
 	async function doDBQuery(sql, inserts) {
-		const conn1 = await mysql.createPool({
+		// console.log('IN dbquery sql = ', sql)
+
+		const CONN = await mysql.createPoo({
 			host: CONFIG.DB_HOST,
 			user: CONFIG.DB_USER,
 			password: CONFIG.DB_PASSWORD,
 			database: CONFIG.DB_DATABASE,
 		})
 		if (inserts) {
-			sql = mysql.format(sql, inserts)
+			const sqlFinal = mysql.format(sql, inserts)
 		}
 
-		// console.log('IN dbquery sql = ', sql)
-		const [rows, fields] = await conn1.execute(sql)
-		await conn1.end()
+		// console.log('IN dbquery sqlFinal = ', sqlFinal)
+		const [rows, fields] = await CONN.execute(sqlFinal)
+		await CONN.end()
 		return rows
 	}
 	return {

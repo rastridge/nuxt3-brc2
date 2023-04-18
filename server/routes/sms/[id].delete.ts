@@ -1,4 +1,4 @@
-import { smsService } from '~~/server/services/smsService'
+import { smsService } from '~/server/services/smsService'
 
 export default defineEventHandler(async (event) => {
 	const config = useRuntimeConfig()

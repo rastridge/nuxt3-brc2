@@ -1,35 +1,29 @@
 <template>
 	<div>
-		<!-- 		allCountries[0][2][0][1]
-		{{ allCountries[0][2][0][1] }}<br />
-		justRegions {{ justRegions }} -->
+		fieldset {{ fieldset }}
 		<FormKit
 			type="select"
 			label="Country"
-			v-model="state.account_addr_country"
-			@input="submitCountry(state)"
+			v-model="fieldset.account_addr_country"
+			@input="submitCountry"
 			:options="justCountries"
 			validation="required"
 		/>
-
 		<FormKit
 			type="select"
 			label="Region"
-			v-model="state.account_addr_state"
-			@input="submitState(state)"
+			v-model="fieldset.account_addr_state"
+			@input="submitState"
 			:options="justRegions"
 			validation="required"
 		/>
-		<!-- IN component fields prop = {{ fields }}<br /><br />
-		IN component state = {{ state }}<br /><br /> -->
-		<!-- IN cjustregaion = {{ justRegions }}<br /><br /> -->
 	</div>
 </template>
 
 <script setup>
 	import { allCountries } from 'country-region-data'
 	import '@formkit/themes/genesis'
-	import { useAuthStore } from '~~/stores/authStore'
+	import { useAuthStore } from '~/stores/authStore'
 	const auth = useAuthStore()
 
 	//
@@ -38,53 +32,56 @@
 	const props = defineProps({
 		fields: { type: Object, required: true },
 	})
-	const state = ref(props.fields)
+	const fieldset = ref(props.fields)
 
 	//
 	// outgoing
 	//
 	const emit = defineEmits(['changeLocation'])
 
-	const submitCountry = (state) => {
-		changeRegions()
+	const submitCountry = () => {
+		setRegions()
 	}
-	const submitState = (state) => {
-		emit('changeLocation', state)
+	const submitState = () => {
+		console.log('IN submitState fieldset = ', fieldset)
+		emit('changeLocation', {
+			account_addr_country: fieldset.value.account_addr_country,
+			account_addr_state: fieldset.value.account_addr_state,
+		})
 	}
 
 	// format for Formkit
 	const justRegions = ref([])
 	const justCountries = ref([])
 
-	let c = []
+	let countries = []
 	for (let i = 0; i < allCountries.length; i++) {
 		let n = {}
 		n.label = allCountries[i][0]
 		n.value = allCountries[i][1]
-		c.push(n)
+		countries.push(n)
 	}
-	justCountries.value = c
+	justCountries.value = countries
 
-	// format justRegions for Formkit
-	// const justRegions = computed(() => {
-	const changeRegions = () => {
-		let r = []
+	// get regions for country
+	const setRegions = () => {
+		let regions = []
+
 		for (let i = 0; i < allCountries.length; i++) {
-			let h = state.value.account_addr_country
-			if (allCountries[i][1] === state.value.account_addr_country) {
-				console.log('i = ', i)
-				r = []
+			if (allCountries[i][1] === fieldset.value.account_addr_country) {
+				// format justRegions for Formkit
+				regions = []
 				for (let k = 0; k < allCountries[i][2].length; k++) {
 					let n = {}
 					n.label = allCountries[i][2][k][0]
 					n.value = allCountries[i][2][k][1]
-					console.log('n, i = ', n, i)
-					r.push(n)
+					// console.log('n, i = ', n, i)
+					regions.push(n)
 				}
+				fieldset.value.account_addr_state = regions[0].value
+				break
 			}
 		}
-		justRegions.value = r
+		justRegions.value = regions
 	}
 </script>
-
-<style scoped></style>

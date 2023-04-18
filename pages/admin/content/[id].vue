@@ -1,6 +1,6 @@
 <script setup>
-	// import { useAuthStore } from '~~/stores/authStore'
-	import { useAlertStore } from '~~/stores/alertStore'
+	// import { useAuthStore } from '~/stores/authStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 	// const auth = useAuthStore()
 	const { onSubmitEdit } = useSubmit()
@@ -45,11 +45,6 @@
 			<Title>Edit custom page {{ id }}</Title>
 		</Head>
 		<common-header title="Edit custom page" />
-
-		<div v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</div>
-
 		<content-form :id="id" @submitted="onSubmit" />
 	</div>
 </template>

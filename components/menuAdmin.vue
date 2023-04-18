@@ -1,8 +1,4 @@
 <template>
-	<!-- <div v-if="alert.message" :class="`alert ${alert.type}`">
-		{{ alert.message }}
-	</div>
-	<div v-else> -->
 	<nav class="fixed-top">
 		<Menubar :model="items" class="p-menubar"> </Menubar>
 	</nav>
@@ -11,8 +7,8 @@
 
 <script setup>
 	import Menubar from 'primevue/menubar'
-	// import { useAlertStore } from '~~/stores/alertStore'
-	import { useAuthStore } from '~~/stores/authStore'
+	// import { useAlertStore } from '~/stores/alertStore'
+	import { useAuthStore } from '~/stores/authStore'
 	// const alert = useAlertStore()
 	const auth = useAuthStore()
 

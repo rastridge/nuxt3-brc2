@@ -62,7 +62,7 @@
 	// import { QuillEditor } from '@vueup/vue-quill'
 	// import ImageUploader from 'quill-image-uploader'
 	// import BlotFormatter from 'quill-blot-formatter'
-	import { useAuthStore } from '~~/stores/authStore'
+	import { useAuthStore } from '~/stores/authStore'
 	const auth = useAuthStore()
 	//
 	// Incoming id

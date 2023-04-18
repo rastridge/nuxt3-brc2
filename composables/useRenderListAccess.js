@@ -1,7 +1,7 @@
-import { useAuthStore } from '~~/stores/authStore'
-const auth = useAuthStore()
+import { useAuthStore } from '~/stores/authStore'
 
 export default function useRenderListAccess() {
+	const auth = useAuthStore()
 	// Probably not used
 	const access = ref({})
 

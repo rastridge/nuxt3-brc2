@@ -1,4 +1,4 @@
-import { newsService } from '~~/server/services/newsService'
+import { newsService } from '~/server/services/newsService'
 
 export default defineEventHandler(async (event) => {
 	const config = useRuntimeConfig()

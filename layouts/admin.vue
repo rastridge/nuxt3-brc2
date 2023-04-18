@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-	import { useAlertStore } from '~~/stores/alertStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
 	useHead({
 		bodyAttrs: { class: 'admin_body_background_color' },

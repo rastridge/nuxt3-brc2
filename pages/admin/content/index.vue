@@ -23,22 +23,18 @@
 </template>
 
 <script setup>
-	const { getAll, deleteOne, changeStatusOne } = useFetchAll()
-
 	definePageMeta({ layout: 'admin' })
+
+	const { getAll, deleteOne, changeStatusOne } = useFetchAll()
+	const { getAccess } = useRenderListAccess()
 
 	//
 	// Initialize values for Renderlist
 	//
-	const { getAccess } = useRenderListAccess()
+
 	const app = 'content'
 	const { editable, addable, deleteable, statusable, viewable } = getAccess(app)
-
-	//
-	// Get all news
-	//
-
-	const { data: content_data, pending } = await getAll('content')
+	const { data: content_data, pending } = await getAll(app)
 
 	//
 	// Renderlist actions

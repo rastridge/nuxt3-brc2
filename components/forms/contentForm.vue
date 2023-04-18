@@ -5,7 +5,7 @@
 			:config="{ validationVisibility: 'live' }"
 			v-model="state"
 			submit-label="Submit"
-			@submit="submitForm(state)"
+			@submit="submitForm"
 		>
 			<FormKit
 				label="Page Title"
@@ -27,15 +27,6 @@
 				@click="toggle"
 			/>
 
-			<!-- 			<div class="editor">
-				<quill-editor
-					label="Content"
-					contentType="html"
-					v-model:content="state.content_body"
-					toolbar="full"
-					:modules="modules"
-				></quill-editor>
-			</div> -->
 			<h4>Content</h4>
 
 			<input-body
@@ -66,17 +57,17 @@
 				validation="required"
 			/>
 		</FormKit>
-		<Button @click.prevent="cancelForm()"> Cancel </Button>
+		<Button @click="cancelForm()"> Cancel </Button>
 	</div>
 	<!-- </div> -->
 </template>
 
 <script setup>
 	import '@formkit/themes/genesis'
-	import { QuillEditor } from '@vueup/vue-quill'
-	import ImageUploader from 'quill-image-uploader'
+	// import { QuillEditor } from '@vueup/vue-quill'
+	// import ImageUploader from 'quill-image-uploader'
 	// import BlotFormatter from 'quill-blot-formatter'
-	import { useAuthStore } from '~~/stores/authStore'
+	import { useAuthStore } from '~/stores/authStore'
 	const auth = useAuthStore()
 
 	const { $dayjs } = useNuxtApp()

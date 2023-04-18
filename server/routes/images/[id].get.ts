@@ -1,4 +1,4 @@
-import { imageService } from '~~/server/services/imageService'
+import { imageService } from '~/server/services/imageService'
 
 export default defineEventHandler(async (event) => {
 	const id = event.context.params.id

@@ -1,4 +1,4 @@
-import { newslettersService } from '~~/server/services/newslettersService'
+import { newslettersService } from '~/server/services/newslettersService'
 
 export default defineEventHandler(async (event) => {
 	const id = event.context.params.id
