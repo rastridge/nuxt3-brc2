@@ -2,6 +2,7 @@ import { useAuthStore } from '~/stores/authStore'
 
 export default function useFetchAll() {
 	const auth = useAuthStore()
+
 	const getAll = async (app) => {
 		const { data, error } = await useFetch(`/${app}/getall`, {
 			method: 'get',

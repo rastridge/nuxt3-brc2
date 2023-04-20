@@ -2,8 +2,6 @@ import { useAuthStore } from '~/stores/authStore'
 
 export default function useRenderListAccess() {
 	const auth = useAuthStore()
-	// Probably not used
-	const access = ref({})
 
 	function getAccess(app) {
 		let access = {
@@ -45,7 +43,6 @@ export default function useRenderListAccess() {
 		return access
 	}
 	return {
-		access,
 		getAccess,
 	}
 }

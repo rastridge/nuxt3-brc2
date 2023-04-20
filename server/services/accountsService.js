@@ -63,26 +63,25 @@ async function getOne(id) {
 /***************************************** */
 async function addOne(info) {
 	try {
-		console.log('try addOne 1')
-
-		const conn = await getConnection()
-		console.log('try addOne 2 ')
-
-		await conn.query('START TRANSACTION')
+		const CONN = await getConnection()
+		await CONN.query('START TRANSACTION')
 		console.log('START TRANSACTION')
 
 		// check for existing  email
 		let sql = `select *
 							from inbrc_accounts
 							where deleted = 0`
-		const [rows, fields] = await conn.execute(sql)
+		const [rows, fields] = await CONN.execute(sql)
 
 		const accounts = rows
 		const lc_account_email = info.account_email.toLowerCase()
 		let account = accounts.find((u) => u.account_email === lc_account_email)
+		console.log('1 addOne')
 
 		// If no conflicts
 		if (!account) {
+			console.log('2 addOne')
+
 			let sql = `INSERT INTO inbrc_accounts
 							SET
 									account_email = ?,
@@ -166,13 +165,13 @@ async function addOne(info) {
 			)
 
 			sql = mysql.format(sql, inserts)
-			console.log('2 ', sql)
+			console.log('2 addOne ', sql)
 
-			const [rows, fields] = await conn.execute(sql)
+			const [rows, fields] = await CONN.execute(sql)
 			account = rows
 
 			const id = account.insertId
-			console.log('3 ', id)
+			console.log('3 addOne ', id)
 
 			const msg =
 				'An account for account ' +
@@ -191,7 +190,7 @@ async function addOne(info) {
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			console.log('4 ', msg)
+			console.log('4 addOne ', msg)
 
 			// sendEmail(emaildata)
 		} else {
@@ -205,22 +204,27 @@ async function addOne(info) {
 				from: CONFIG.FROM,
 				fromName: CONFIG.FROM_NAME,
 				to: 'ron.astridge@me.com',
-				subject: 'Buffalo Ruggby Club Member Account Modification',
+				subject: 'Buffalo Rugby Club Member Account Modification',
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			// console.log('email_data= ', email_data)
-
 			// sendEmail(emaildata)
+
+			// await CONN.end()
+			console.log(
+				'accountsService addOne An account with email ' +
+					lc_account_email +
+					' already exists'
+			)
 		}
 
-		await conn.query('COMMIT')
-		await conn.end()
+		await CONN.query('COMMIT')
+		await CONN.end()
 		console.log('accountsService addOne COMMIT')
 		return account
 	} catch (e) {
-		await conn.query('ROLLBACK e= ', e)
-		await conn.end()
+		await CONN.query('ROLLBACK')
+		await CONN.end()
 		console.log('accountsService addOne ROLLBACK')
 	}
 }
@@ -383,7 +387,7 @@ async function editOne(info) {
 		console.log('accountsService editOne COMMIT')
 		return account
 	} catch (e) {
-		await conn.query('ROLLBACK e = ', e)
+		await conn.query('ROLLBACK')
 		await conn.end()
 		return e
 	}

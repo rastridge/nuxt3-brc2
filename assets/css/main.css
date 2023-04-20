@@ -43,6 +43,33 @@ html {
 .error {
 	color: red;
 }
+.alert-danger {
+	margin: auto;
+	padding: 0.5rem;
+	background-color: white;
+	color: red;
+	width: 50%;
+	border: 1px solid red;
+	border-radius: 10px;
+}
+.alert-success {
+	margin: auto;
+	padding: 0.5rem;
+	background-color: white;
+	color: yellow;
+	width: 50%;
+	border: 1px solid yellow;
+	border-radius: 10px;
+}
+.alert-info {
+	margin: auto;
+	padding: 0.5rem;
+	background-color: white;
+	color: green;
+	width: 50%;
+	border: 1px solid green;
+	border-radius: 10px;
+}
 .form-box {
 	background-color: rgba(255, 255, 255, 0.2);
 	margin: 0 auto;

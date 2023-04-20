@@ -11,8 +11,9 @@
 			<FormKit
 				type="form"
 				v-model="state"
+				#default="{ state }"
 				submit-label="Submit"
-				@submit="submitForm(state)"
+				@submit="submitForm"
 			>
 				<FormKit
 					label="First Name"
@@ -56,21 +57,8 @@
 					name="account_addr_city"
 					validation="required"
 				/>
-				<!-- <FormKit
-					type="text"
-					label="State"
-					name="account_addr_state"
-					validation="required"
-				/>
- -->
-				<!-- <FormKit
-					type="text"
-					label="Country"
-					name="account_addr_country"
-					validation="required"
-				/> -->
 
-				<!-- 				<FormKit
+				<FormKit
 					type="select"
 					label="Country"
 					name="account_addr_country"
@@ -84,14 +72,7 @@
 					name="account_addr_state"
 					:options="justRegions"
 					validation="required"
-				/> -->
-				<input-country-region
-					:fields="location"
-					@changeLocation="changeLocation"
 				/>
-				<br />IN accts form state.account_addr_country =
-				{{ state.account_addr_country }}<br />
-				state.account_addr_state = {{ state.account_addr_state }}
 				<FormKit
 					type="text"
 					label="Postal Code"
@@ -175,11 +156,15 @@
 			<div class="mb-3">
 				<Button @click.prevent="cancelForm()"> Cancel </Button>
 			</div>
+			state.account_addr_state = {{ state.account_addr_state }}<br />
+			state.account_addr_country = {{ state.account_addr_country }}<br />
 		</div>
 	</div>
 </template>
 
 <script setup>
+	import { allCountries } from 'country-region-data'
+
 	import { VueTelInput } from 'vue-tel-input'
 	import 'vue-tel-input/dist/vue-tel-input.css'
 	import '@formkit/themes/genesis'
@@ -333,6 +318,41 @@
 			showDialCode: true,
 		},
 	})
+
+	// format for Formkit
+	const justRegions = ref([])
+	const justCountries = ref([])
+
+	let countries = []
+	for (let i = 0; i < allCountries.length; i++) {
+		let n = {}
+		n.label = allCountries[i][0]
+		n.value = allCountries[i][1]
+		countries.push(n)
+	}
+	justCountries.value = countries
+
+	// get regions for country
+	const setRegions = () => {
+		let regions = []
+
+		for (let i = 0; i < allCountries.length; i++) {
+			if (allCountries[i][1] === fieldset.value.account_addr_country) {
+				// format justRegions for Formkit
+				regions = []
+				for (let k = 0; k < allCountries[i][2].length; k++) {
+					let n = {}
+					n.label = allCountries[i][2][k][0]
+					n.value = allCountries[i][2][k][1]
+					// console.log('n, i = ', n, i)
+					regions.push(n)
+				}
+				fieldset.value.account_addr_state = regions[0].value
+				break
+			}
+		}
+		justRegions.value = regions
+	}
 </script>
 
 <style scoped></style>

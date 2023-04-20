@@ -1,8 +1,6 @@
 <script setup>
-	// import { useAuthStore } from '~/stores/authStore'
 	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
-	// const auth = useAuthStore()
 	const { onSubmitAdd } = useSubmit()
 
 	definePageMeta({ layout: 'admin' })
@@ -14,7 +12,9 @@
 		saving.value = true
 		onSubmitAdd('accounts', form_state)
 		saving.value = false
-		navigateTo(`/admin/accounts/men`)
+		if (!alert.message) {
+			navigateTo(`/admin/accounts/men`)
+		}
 	}
 	/* 	const onSubmit = async function (state) {
 		const { data, pending, error } = await useFetch('/accounts/addone', {
@@ -37,7 +37,12 @@
 		<Head>
 			<Title>Add Account</Title>
 		</Head>
+		<div v-if="saving">Saving . . .</div>
 		<common-header title="Add account" />
+		<p v-if="alert.message" :class="`alert ${alert.type}`">
+			{{ alert.message }}
+		</p>
+
 		<accounts-form @submitted="onSubmit" />
 	</div>
 </template>

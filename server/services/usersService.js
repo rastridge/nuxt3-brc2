@@ -437,7 +437,7 @@ async function editOne(info) {
 		console.log('userservice editOne COMMIT ')
 		return user
 	} catch (e) {
-		await conn.query('ROLLBACK e = ', e)
+		await conn.query('ROLLBACK')
 		await conn.end()
 		console.log('userservice editOne ROLLBACK ')
 	}

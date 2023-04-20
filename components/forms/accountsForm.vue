@@ -10,8 +10,8 @@
 		<div v-else class="form-box">
 			<FormKit
 				type="form"
-				v-model="state"
 				#default="{ state }"
+				v-model="state"
 				submit-label="Submit"
 				@submit="submitForm"
 			>
@@ -57,7 +57,6 @@
 					name="account_addr_city"
 					validation="required"
 				/>
-
 				<FormKit
 					type="select"
 					label="Country"
@@ -66,7 +65,6 @@
 					:options="justCountries"
 					validation="required"
 				/>
-
 				<FormKit
 					type="select"
 					label="Region"
@@ -75,15 +73,13 @@
 					:options="justRegions"
 					validation="required"
 				/>
-				<!-- //////////////////////////////////// -->
-
 				<FormKit
 					type="text"
 					label="Postal Code"
 					name="account_addr_postal"
 					validation="required | matches:/^[0-9]{5}$/"
 				/>
-				<div style="width: 90%; padding-bottom: 0.5rem">
+				<!-- 				<div style="width: 90%; padding-bottom: 0.5rem">
 					<h4>Phone</h4>
 					<vue-tel-input
 						mode="international"
@@ -91,7 +87,13 @@
 						v-model="state.account_addr_phone"
 					></vue-tel-input>
 				</div>
-
+				state.account_addr_phone = {{ state.account_addr_phone }} -->
+				<FormKit
+					type="text"
+					label="Phone"
+					name="account_addr_phone"
+					validation="required"
+				/>
 				<FormKit
 					type="select"
 					label="Show phone?"
@@ -101,7 +103,6 @@
 						{ label: 'No', value: 0 },
 					]"
 				/>
-
 				<FormKit
 					type="select"
 					label="Show address?"
@@ -111,7 +112,6 @@
 						{ label: 'No', value: 0 },
 					]"
 				/>
-
 				<FormKit
 					type="select"
 					label="Receive newsletter?"
@@ -121,7 +121,6 @@
 						{ label: 'No', value: 0 },
 					]"
 				/>
-
 				<FormKit
 					type="select"
 					label="Receive US Mail?"
@@ -156,20 +155,15 @@
 					:options="memberAdminTypeOptions"
 					validation="required"
 				/>
-				countryNode = {{ countryNode }}
 			</FormKit>
 			<div class="mb-3">
 				<Button @click.prevent="cancelForm()"> Cancel </Button>
 			</div>
-			countryNode = {{ countryNode }} <br />state.account_addr_state =
-			{{ state.account_addr_state }}<br />
-			state.account_addr_country = {{ state.account_addr_country }}<br />
 		</div>
 	</div>
 </template>
 
 <script setup>
-	import { allCountries } from 'country-region-data'
 	import { getNode } from '@formkit/core'
 	import { VueTelInput } from 'vue-tel-input'
 	import 'vue-tel-input/dist/vue-tel-input.css'
@@ -177,7 +171,8 @@
 	import { useAuthStore } from '~/stores/authStore'
 	const auth = useAuthStore()
 	const { $dayjs } = useNuxtApp()
-
+	const { getCountries, setRegions } = useLocations()
+	const { getMemberAdminTypeOptions, getMemberTypeOptions } = useMembertypes()
 	//
 	// Outgoing
 	//
@@ -194,8 +189,10 @@
 	const state = ref({})
 
 	state.value.member_year = $dayjs().format('YYYY')
+	state.value.account_addr_phone = '+1716'
 	state.value.member_show_phone = '1'
 	state.value.account_addr_state = 'NY'
+	state.value.account_addr_street_ext = ''
 	state.value.account_addr_country = 'US'
 	state.value.member_show_addr = '1'
 	state.value.newsletter_recipient = '1'
@@ -224,75 +221,19 @@
 		state.value = formdata.value
 	}
 	//
-	// get regions for country
-	//
-	const setRegions = (countrycode) => {
-		let regions = []
+	// create coutry and region options formatted for Formkit
+	const justCountries = ref(getCountries())
+	// justCountries.value = getCountries()
 
-		for (let i = 0; i < allCountries.length; i++) {
-			if (allCountries[i][1] === countrycode) {
-				// format justRegions for Formkit
-				regions = []
-				for (let k = 0; k < allCountries[i][2].length; k++) {
-					let n = {}
-					n.label = allCountries[i][2][k][0]
-					n.value = allCountries[i][2][k][1]
-					// console.log('n, i = ', n, i)
-					regions.push(n)
-				}
-				break
-			}
-		}
-		return regions
-	}
-	const justRegions = ref([])
-	justRegions.value = setRegions(state.value.account_addr_country)
-	//
-	// get member admin types for select
-	const { data: memberAdminTypes } = await useFetch(
-		'/accounts/memberadmintypes',
-		{
-			method: 'get',
-			headers: {
-				authorization: auth.user.token,
-			},
-		}
-	)
-	// convert for formkit
-	const getMemberAdminTypeOptions = (mtypes) => {
-		let result = []
-		mtypes.map((old) => {
-			let n = {}
-			n.label = old.member_admin_type
-			n.value = old.member_admin_type_id
-			result.push(n)
-		})
-		return result
-	}
+	const justRegions = ref(setRegions(state.value.account_addr_country))
+	// set regions for initial country
+	// justRegions.value = setRegions(state.value.account_addr_country)
 
-	const memberAdminTypeOptions = getMemberAdminTypeOptions(
-		memberAdminTypes.value
-	)
 	//
-	// get member types
-	const { data: memberTypes } = await useFetch('/accounts/membertypes', {
-		method: 'get',
-		headers: {
-			authorization: auth.user.token,
-		},
-	})
-	// convert for formkit
-	const getMemberTypeOptions = (memberTypes) => {
-		let result = []
-		memberTypes.map((old) => {
-			let n = {}
-			n.label = old.member_type
-			n.value = old.member_type_id
-			result.push(n)
-		})
-		return result
-	}
-	const memberTypeOptions = getMemberTypeOptions(memberTypes.value)
+	// get member types for options formatted for Formkit
+	//
+	const memberAdminTypeOptions = await getMemberAdminTypeOptions()
+	const memberTypeOptions = await getMemberTypeOptions()
 
 	//
 	// form handlers
@@ -333,9 +274,7 @@
 
 	//
 	// FormKit stuff
-	//
-
-	// We add it inside a onMounted to make sure the node exists
+	// Region depends on country
 	onMounted(() => {
 		// Use the IDs of the inputs you want to get
 		const countryNode = getNode('account_addr_country')
@@ -343,25 +282,8 @@
 
 		// Here we are listening for the 'commit' event
 		countryNode.on('commit', ({ payload }) => {
-			// We update the value of the state
+			// We update the value of the regions
 			justRegions.value = setRegions(payload)
-			stateNode.input(justRegions.value[0].value)
 		})
 	})
-
-	// create options formatted for Formkit
-	const justCountries = ref([])
-
-	let countries = []
-	for (let i = 0; i < allCountries.length; i++) {
-		let n = {}
-		n.label = allCountries[i][0]
-		n.value = allCountries[i][1]
-		countries.push(n)
-	}
-	justCountries.value = countries
-
-	// get regions for country
 </script>
-
-<style scoped></style>
