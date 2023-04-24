@@ -72,7 +72,6 @@ async function addOne(info) {
 							from inbrc_accounts
 							where deleted = 0`
 		const [rows, fields] = await CONN.execute(sql)
-
 		const accounts = rows
 		const lc_account_email = info.account_email.toLowerCase()
 		let account = accounts.find((u) => u.account_email === lc_account_email)
@@ -220,15 +219,23 @@ async function addOne(info) {
 /***************************************** */
 async function editOne(info) {
 	try {
-		const conn = await getConnection()
-		await conn.query('START TRANSACTION')
+		const CONN = await getConnection()
+		/* 		const CONFIG = useRuntimeConfig()
+
+		const CONN = await mysql.createPool({
+			host: CONFIG.DB_HOST,
+			user: CONFIG.DB_USER,
+			password: CONFIG.DB_PASSWORD,
+			database: CONFIG.DB_DATABASE,
+		}) */
+		await CONN.query('START TRANSACTION')
 		console.log('START TRANSACTION')
 
 		// check for  updated email in others
 		let sql = `select *
 							from inbrc_accounts
 							where deleted = 0  AND account_id <> ${info.account_id}`
-		const [rows, fields] = await conn.execute(sql)
+		const [rows, fields] = await CONN.execute(sql)
 		const accounts = rows
 		const lc_account_email = info.account_email.toLowerCase()
 		let account = accounts.find((u) => u.account_email === lc_account_email)
@@ -262,7 +269,6 @@ async function editOne(info) {
 									modified_dt= NOW()
 								WHERE account_id = ?;`
 			const {
-				account_email,
 				member_firstname,
 				member_lastname,
 
@@ -320,7 +326,7 @@ async function editOne(info) {
 
 			sql = mysql.format(sql, inserts)
 
-			const [rows, fields] = await conn.execute(sql)
+			const [rows, fields] = await CONN.execute(sql)
 			account = rows
 
 			const msg =
@@ -332,39 +338,29 @@ async function editOne(info) {
 				' email = ' +
 				lc_account_email
 
-			const email_data = {
-				from: CONFIG.FROM,
-				fromName: CONFIG.FROM_NAME,
-				to: 'ron.astridge@me.com',
-				subject: 'Foodshuttlewny Member Account Modification',
-				body_text: '',
-				body_html: '<h3>' + msg + '</h3>',
-			}
-			// sendEmail(emaildata)
+			// const email_data = {
+			// 	from: CONFIG.FROM,
+			// 	fromName: CONFIG.FROM_NAME,
+			// 	to: 'ron.astridge@me.com',
+			// 	subject: 'Buffalo Rugby Club Member Account Modification',
+			// 	body_text: '',
+			// 	body_html: '<h3>' + msg + '</h3>',
+			// }
+			// sendEmail(email_data)
 		} else {
 			const msg =
 				'An account with email ' + lc_account_email + ' already exists'
 			account = { message: msg }
-
-			const email_data = {
-				from: CONFIG.FROM,
-				fromName: CONFIG.FROM_NAME,
-				to: 'ron.astridge@me.com',
-				subject: 'Foodshuttlewny Member Account Modification',
-				body_text: '',
-				body_html: '<h3>' + msg + '</h3>',
-			}
-
-			// sendEmail(emaildata)
 		}
 
-		await conn.query('COMMIT')
-		await conn.end()
-		console.log('accountsService editOne COMMIT')
+		await CONN.query('COMMIT')
+		await CONN.end()
+		console.log(' END TRANSACTION accountsService editOne COMMIT')
 		return account
 	} catch (e) {
-		await conn.query('ROLLBACK')
-		await conn.end()
+		await CONN.query('ROLLBACK')
+		await CONN.end()
+		console.log('END TRANSACTION accountsService addOne ROLLBACK')
 		return e
 	}
 }

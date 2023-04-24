@@ -3,9 +3,8 @@ import https from 'https'
 
 export default function useEmail() {
 	const { EE_API_KEY } = useRuntimeConfig()
-	// console.log('IN useSendEmail EE_API_KEY = ', EE_API_KEY)
-
 	function sendEmail(email_data) {
+		console.log('IN sendEmail email_data = ', email_data)
 		const post_data = querystring.stringify({
 			api_key: EE_API_KEY,
 			subject: email_data.subject,

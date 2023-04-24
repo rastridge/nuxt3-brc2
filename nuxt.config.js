@@ -68,7 +68,10 @@ export default defineNuxtConfig({
 		MY_MEDIA_API: process.env.MY_MEDIA_API,
 		// Keys within public, will be also be
 		// exposed to the client-side
-		public: {},
+		public: {
+			FROM: process.env.FROM,
+			FROM_NAME: process.env.FROM_NAME,
+		},
 	},
 
 	build: {
