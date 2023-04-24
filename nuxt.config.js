@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	ssr: false,
+
 	app: {
 		pageTransition: { name: 'page', mode: 'out-in' },
 		head: {
@@ -24,6 +25,7 @@ export default defineNuxtConfig({
 			],
 		},
 	},
+
 	modules: ['@formkit/nuxt', '@pinia/nuxt', 'formidable'],
 	components: ['~/components/forms', '~/components'],
 
@@ -32,11 +34,13 @@ export default defineNuxtConfig({
 		defaultLocale: 'en',
 		defaultTimeZone: 'America/New_York',
 	},
+
 	css: [
 		'primevue/resources/themes/saga-blue/theme.css',
 		'primevue/resources/primevue.css',
 		'primeicons/primeicons.css',
 	],
+
 	runtimeConfig: {
 		// The private keys which are only
 		// available within server-side
@@ -70,9 +74,12 @@ export default defineNuxtConfig({
 	build: {
 		transpile: ['primevue'],
 	},
+
 	nitro: {
 		hooks: {
 			'dev:reload': () => require('sharp'),
 		},
 	},
+
+	devtools: false,
 })

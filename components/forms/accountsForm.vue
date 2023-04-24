@@ -32,7 +32,9 @@
 					label="Email address"
 					name="account_email"
 					validation="required|email"
+					:errors="errors"
 				/>
+
 				<FormKit
 					type="number"
 					label="Year joined"
@@ -156,8 +158,11 @@
 					validation="required"
 				/>
 			</FormKit>
+			<p v-if="alert.message !== null" :class="`alert ${alert.type}`">
+				{{ alert.message }}
+			</p>
 			<div class="mb-3">
-				<Button @click.prevent="cancelForm()"> Cancel </Button>
+				<Button @click="cancelForm"> Cancel </Button>
 			</div>
 		</div>
 	</div>
@@ -169,7 +174,9 @@
 	import 'vue-tel-input/dist/vue-tel-input.css'
 	import '@formkit/themes/genesis'
 	import { useAuthStore } from '~/stores/authStore'
+	import { useAlertStore } from '~/stores/alertStore'
 	const auth = useAuthStore()
+	const alert = useAlertStore()
 	const { $dayjs } = useNuxtApp()
 	const { getCountries, setRegions } = useLocations()
 	const { getMemberAdminTypeOptions, getMemberTypeOptions } = useMembertypes()
@@ -244,7 +251,12 @@
 	const cancelForm = () => {
 		navigateTo('/admin/accounts/men') // needs to be / for self register
 	}
-
+	//
+	// errors
+	//
+	const errors = computed(() => {
+		return alert.message !== null ? ['Already exists'] : ['']
+	})
 	//
 	// Set properties of Telephone Input
 	//

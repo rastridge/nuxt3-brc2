@@ -4,32 +4,21 @@
 	const { onSubmitAdd } = useSubmit()
 
 	definePageMeta({ layout: 'admin' })
-	const saving = ref(false)
 	//
 	// Accounts form action
 	//
-	const onSubmit = function (form_state) {
-		saving.value = true
-		onSubmitAdd('accounts', form_state)
-		saving.value = false
-		if (!alert.message) {
+	const onSubmit = async function (form_state) {
+		await onSubmitAdd('accounts', form_state)
+		if (alert.message === null) {
 			navigateTo(`/admin/accounts/men`)
 		}
 	}
-	/* 	const onSubmit = async function (state) {
-		const { data, pending, error } = await useFetch('/accounts/addone', {
-			method: 'post',
-			body: state,
-			headers: {
-				authorization: auth.user.token,
-			},
-		})
-		if (data.value.message) {
-			alert.error(data.value.message)
-		} else {
-			navigateTo('/admin/accounts/men')
-		}
-	}*/
+
+	/* 	const displayModal = ref(false)
+
+	const closeModal = () => {
+		displayModal.value = false
+	} */
 </script>
 
 <template>
@@ -37,14 +26,8 @@
 		<Head>
 			<Title>Add Account</Title>
 		</Head>
-		<div v-if="saving">Saving . . .</div>
 		<common-header title="Add account" />
-		<p v-if="alert.message" :class="`alert ${alert.type}`">
-			{{ alert.message }}
-		</p>
-
+		<!-- <ErrorDialog /> -->
 		<accounts-form @submitted="onSubmit" />
 	</div>
 </template>
-
-<style scoped></style>

@@ -76,12 +76,9 @@ async function addOne(info) {
 		const accounts = rows
 		const lc_account_email = info.account_email.toLowerCase()
 		let account = accounts.find((u) => u.account_email === lc_account_email)
-		console.log('1 addOne')
 
 		// If no conflicts
 		if (!account) {
-			console.log('2 addOne')
-
 			let sql = `INSERT INTO inbrc_accounts
 							SET
 									account_email = ?,
@@ -112,7 +109,6 @@ async function addOne(info) {
 									created_dt = NOW(),
 									modified_dt= NOW();`
 			const {
-				account_email,
 				member_firstname,
 				member_lastname,
 
@@ -165,13 +161,11 @@ async function addOne(info) {
 			)
 
 			sql = mysql.format(sql, inserts)
-			console.log('2 addOne ', sql)
 
 			const [rows, fields] = await CONN.execute(sql)
 			account = rows
 
 			const id = account.insertId
-			console.log('3 addOne ', id)
 
 			const msg =
 				'An account for account ' +
@@ -190,7 +184,6 @@ async function addOne(info) {
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			console.log('4 addOne ', msg)
 
 			// sendEmail(emaildata)
 		} else {
@@ -209,13 +202,6 @@ async function addOne(info) {
 				body_html: '<h3>' + msg + '</h3>',
 			}
 			// sendEmail(emaildata)
-
-			// await CONN.end()
-			console.log(
-				'accountsService addOne An account with email ' +
-					lc_account_email +
-					' already exists'
-			)
 		}
 
 		await CONN.query('COMMIT')
@@ -246,11 +232,8 @@ async function editOne(info) {
 		const accounts = rows
 		const lc_account_email = info.account_email.toLowerCase()
 		let account = accounts.find((u) => u.account_email === lc_account_email)
-		console.log('got here 1')
 
 		if (!account) {
-			console.log('got here 2')
-
 			let sql = `UPDATE inbrc_accounts
 							SET
 									account_email = ?,
@@ -305,7 +288,6 @@ async function editOne(info) {
 
 				account_id,
 			} = info
-			console.log('got here 3 ')
 
 			let inserts = []
 			inserts.push(
@@ -335,15 +317,11 @@ async function editOne(info) {
 
 				account_id
 			)
-			// console.log('got here 4 inserts = ', inserts)
 
 			sql = mysql.format(sql, inserts)
 
-			console.log('got here 5 sql = ', sql)
-
 			const [rows, fields] = await conn.execute(sql)
 			account = rows
-			console.log('got here 5 account = ', account)
 
 			const msg =
 				'An account for account ' +
@@ -376,8 +354,6 @@ async function editOne(info) {
 				body_text: '',
 				body_html: '<h3>' + msg + '</h3>',
 			}
-			// console.log('email_data= ', email_data)
-			console.log('EXISTS ', msg)
 
 			// sendEmail(emaildata)
 		}

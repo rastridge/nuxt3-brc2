@@ -11,9 +11,9 @@
 			:style="{ width: '50vw' }"
 		>
 			<p>
-				Registering is an expression of interest in being informed of Food
-				Shuttle of WNY activities and does not imply any commitment. Give us a
-				try and see if we're right for you.
+				Registering is an expression of interest in being informed of Buffalo
+				Rugby Club activities and does not imply any commitment. Give us a try
+				and see if we're right for you.
 			</p>
 			<template #footer>
 				<Button
@@ -50,12 +50,18 @@
 				authorization: 'not-needed',
 			},
 		})
-
-		if (data.value.message) {
-			// alert store
-			alert.error(data.value.message)
+		alert.clear()
+		if (error.value) {
+			throw createError({
+				...error.value,
+				statusMessage: `Error submitting data to /${app}/addone`,
+			})
 		} else {
-			navigateTo('/')
+			if (data.value.message) {
+				alert.error(data.value.message)
+			} else {
+				navigateTo('/')
+			}
 		}
 	}
 </script>
