@@ -3,41 +3,47 @@
 		<FormKit
 			type="form"
 			v-model="state"
+			validation-visibility="live"
 			submit-label="Submit"
 			@submit="submitForm"
 		>
-			<h4>* required</h4>
 			<FormKit
-				label="First Name *"
+				label="First Name"
 				name="member_firstname"
 				type="text"
 				validation="required"
+				validation-visibility="live"
 			/>
 			<FormKit
-				label="Last Name *"
+				label="Last Name"
 				name="member_lastname"
 				type="text"
 				validation="required"
+				validation-visibility="live"
 			/>
 			<FormKit
 				type="email"
-				label="Email address *"
+				label="Email address"
 				name="account_email"
 				validation="required|email"
+				:errors="errors"
+				validation-visibility="live"
 			/>
 
 			<FormKit
 				type="text"
-				label="Street address *"
+				label="Street address"
 				name="account_addr_street"
 				validation="required"
+				validation-visibility="live"
 			/>
 			<FormKit type="text" label="Street Ext" name="account_addr_street_ext" />
 			<FormKit
 				type="text"
-				label="City *"
+				label="City"
 				name="account_addr_city"
 				validation="required"
+				validation-visibility="live"
 			/>
 			<FormKit
 				type="select"
@@ -46,6 +52,7 @@
 				id="account_addr_country"
 				:options="justCountries"
 				validation="required"
+				validation-visibility="live"
 			/>
 			<FormKit
 				type="select"
@@ -54,23 +61,27 @@
 				id="account_addr_state"
 				:options="justRegions"
 				validation="required"
+				validation-visibility="live"
 			/>
 			<FormKit
 				type="text"
-				label="Postal Code *"
+				label="Postal Code"
 				name="account_addr_postal"
-				validation="required | matches:/^[0-9]{5}$/"
+				validation="required"
+				validation-visibility="live"
 			/>
+
 			<FormKit
 				type="tel"
-				label="Phone number *"
+				label="Phone number"
 				name="account_addr_phone"
-				placeholder="1-###-###-####"
+				placeholder="+1##########"
 				v-model="state.account_addr_phone"
-				validation="required | matches:/^[1]{1}-[0-9]{3}-[0-9]{3}-[0-9]{4}$/"
+				validation="required | matches:/^\+[1]{1}[0-9]{3}[0-9]{3}[0-9]{4}$/"
 				:validation-messages="{
-					matches: 'Phone number must be in the format 1-###-###-####',
+					matches: 'US/CA only. Must be in thein the format +1#########',
 				}"
+				validation-visibility="live"
 			/>
 			<FormKit
 				type="select"
@@ -131,6 +142,7 @@
 	import { getNode } from '@formkit/core'
 	import { useAlertStore } from '~/stores/alertStore'
 	import '@formkit/themes/genesis'
+
 	const { getCountries, setRegions } = useLocations()
 	const alert = useAlertStore()
 	const { $dayjs } = useNuxtApp()
@@ -153,7 +165,7 @@
 		account_addr_state: 'NY',
 		account_addr_country: 'US',
 		account_addr_postal: '',
-		account_addr_phone: '1-716',
+		account_addr_phone: '+1716',
 
 		member_show_phone: '1',
 		member_show_addr: '1',
@@ -185,6 +197,13 @@
 	const cancelForm = () => {
 		navigateTo('/')
 	}
+	//
+	// errors
+	//
+	const errors = computed(() => {
+		return alert.message !== null ? ['Already exists'] : ['']
+	})
+
 	//
 	// FormKit stuff
 	// Region depends on country

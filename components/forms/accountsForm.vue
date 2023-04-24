@@ -79,22 +79,19 @@
 					type="text"
 					label="Postal Code"
 					name="account_addr_postal"
-					validation="required | matches:/^[0-9]{5}$/"
-				/>
-				<!-- 				<div style="width: 90%; padding-bottom: 0.5rem">
-					<h4>Phone</h4>
-					<vue-tel-input
-						mode="international"
-						v-bind="bindProps"
-						v-model="state.account_addr_phone"
-					></vue-tel-input>
-				</div>
-				state.account_addr_phone = {{ state.account_addr_phone }} -->
-				<FormKit
-					type="text"
-					label="Phone"
-					name="account_addr_phone"
 					validation="required"
+				/>
+				<FormKit
+					type="tel"
+					label="Phone number"
+					name="account_addr_phone"
+					placeholder="+1##########"
+					v-model="state.account_addr_phone"
+					validation="required | matches:/^\+[1]{1}[0-9]{3}[0-9]{3}[0-9]{4}$/"
+					:validation-messages="{
+						matches: 'US/CA only. Must be in the format +1#########',
+					}"
+					validation-visibility="live"
 				/>
 				<FormKit
 					type="select"
@@ -170,8 +167,6 @@
 
 <script setup>
 	import { getNode } from '@formkit/core'
-	import { VueTelInput } from 'vue-tel-input'
-	import 'vue-tel-input/dist/vue-tel-input.css'
 	import '@formkit/themes/genesis'
 	import { useAuthStore } from '~/stores/authStore'
 	import { useAlertStore } from '~/stores/alertStore'
@@ -256,32 +251,6 @@
 	//
 	const errors = computed(() => {
 		return alert.message !== null ? ['Already exists'] : ['']
-	})
-	//
-	// Set properties of Telephone Input
-	//
-	const bindProps = ref({
-		mode: 'international',
-		defaultCountry: 'US',
-		disabledFetchingCountry: false,
-		disabled: false,
-		disabledFormatting: false,
-		required: true,
-		dynamicPlaceholder: true,
-		enabledCountryCode: true,
-		enabledFlags: true,
-		preferredCountries: ['US', 'CA'],
-		autocomplete: 'off',
-		name: 'account_addr_phone',
-		maxLen: 25,
-		wrapperClasses: '',
-		inputClasses: '',
-		dropdownOptions: {
-			disabledDialCode: false,
-		},
-		inputOptions: {
-			showDialCode: true,
-		},
 	})
 
 	//
