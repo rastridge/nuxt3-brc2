@@ -3,6 +3,7 @@ const CONFIG = useRuntimeConfig()
 
 const { doDBQuery } = useQuery()
 const { getConnection } = useDBConnection()
+const { sendEmail } = useEmail()
 
 export const accountsService = {
 	getAll,
@@ -170,31 +171,29 @@ async function addOne(info) {
 			// account = rows
 			// const id = account.insertId
 
-	
-			// //
-			// // for email when it I get it working
-			// //
-			// const email_msg =
-			// 	'An account for account ' +
-			// 	member_firstname +
-			// 	' ' +
-			// 	member_lastname +
-			// 	'  has been created ' +
-			// 	' email = ' +
-			// 	lc_account_email
-
-			// const email_data = {
-			// 	from: CONFIG.FROM,
-			// 	fromName: CONFIG.FROM_NAME,
-			// 	to: CONFIG.TO,
-			// 	subject: 'Buffalo Ruggby Club Member Account Addition',
-			// 	body_text: '',
-			// 	body_html: '<h3>' + email_msg + '</h3>',
-			// }
-
-			// // the problem - causes CONN undefined
-			// await sendEmail(email_data)
  */
+			//
+			// for email when it I get it working
+			//
+			const email_msg =
+				'An account for account ' +
+				member_firstname +
+				' ' +
+				member_lastname +
+				'  has been created ' +
+				' email = ' +
+				lc_account_email
+
+			const email_data = {
+				from: CONFIG.FROM,
+				fromName: CONFIG.FROM_NAME,
+				to: CONFIG.TO,
+				subject: 'Buffalo Ruggby Club Member Account Addition',
+				body_text: '',
+				body_html: '<h3>' + email_msg + '</h3>',
+			}
+			// the problem - causes CONN undefined
+			await sendEmail(email_data)
 		} else {
 			error_msg =
 				'An account with email ' + lc_account_email + ' already exists'
@@ -322,7 +321,6 @@ async function editOne(info) {
 			sql = mysql.format(sql, inserts)
 			await CONN.execute(sql)
 
-			/* 			
 			const [rows, fields] = await CONN.execute(sql)
 			account = rows
 
@@ -331,29 +329,27 @@ async function editOne(info) {
 			// account = rows
 			// const id = account.insertId
 
-			// //
-			// // for email when it I get it working
-			// //
-			// const email_msg =
-			// 	'An account for account ' +
-			// 	member_firstname +
-			// 	' ' +
-			// 	member_lastname +
-			// 	'  has been updated ' +
-			// 	' email = ' +
-			// 	lc_account_email
-			// const email_data = {
-			// 	from: CONFIG.FROM,
-			// 	fromName: CONFIG.FROM_NAME,
-			// 	to: CONFIG.TO,
-			// 	subject: 'Buffalo Ruggby Club Member Account Addition',
-			// 	body_text: '',
-			// 	body_html: '<h3>' + email_msg + '</h3>',
-			// }
-
-			// // the problem - causes CONN undefined
-			// await sendEmail(email_data)
-			 */
+			/*						 */
+			//
+			// for email when it I get it working
+			//
+			const email_msg =
+				'An account for account ' +
+				member_firstname +
+				' ' +
+				member_lastname +
+				'  has been updated ' +
+				' email = ' +
+				lc_account_email
+			const email_data = {
+				from: CONFIG.FROM,
+				fromName: CONFIG.FROM_NAME,
+				to: CONFIG.TO,
+				subject: 'Buffalo Ruggby Club Member Account Addition',
+				body_text: '',
+				body_html: '<h3>' + email_msg + '</h3>',
+			}
+			await sendEmail(email_data)
 		} else {
 			error_msg =
 				'An account with email ' + lc_account_email + ' already exists'
