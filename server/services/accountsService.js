@@ -67,7 +67,7 @@ async function addOne(info) {
 		await CONN.query('START TRANSACTION')
 		console.log('START TRANSACTION')
 
-		// check for existing  email
+		// check for existing email
 		let sql = `select *
 							from inbrc_accounts
 							where deleted = 0`
@@ -76,10 +76,15 @@ async function addOne(info) {
 		const lc_account_email = info.account_email.toLowerCase()
 		let account = accounts.find((u) => u.account_email === lc_account_email)
 
-		// If no conflicts
+		let error_msg = null
+		// If no email conflict
+		//
 		if (!account) {
+			//
+			// add record
+			//
 			let sql = `INSERT INTO inbrc_accounts
-							SET
+									SET
 									account_email = ?,
 									member_firstname = ?,
 									member_lastname = ?,
@@ -131,7 +136,6 @@ async function addOne(info) {
 				member_admin_type_id,
 				member_admin_type2_id,
 			} = info
-
 			let inserts = []
 			inserts.push(
 				lc_account_email,
@@ -158,59 +162,55 @@ async function addOne(info) {
 				member_admin_type_id,
 				member_admin_type2_id
 			)
-
 			sql = mysql.format(sql, inserts)
+			await CONN.execute(sql)
+			/*
+			//unneeded?
+			// const [rows, fields] = await CONN.execute(sql)
+			// account = rows
+			// const id = account.insertId
 
-			const [rows, fields] = await CONN.execute(sql)
-			account = rows
+	
+			// //
+			// // for email when it I get it working
+			// //
+			// const email_msg =
+			// 	'An account for account ' +
+			// 	member_firstname +
+			// 	' ' +
+			// 	member_lastname +
+			// 	'  has been created ' +
+			// 	' email = ' +
+			// 	lc_account_email
 
-			const id = account.insertId
+			// const email_data = {
+			// 	from: CONFIG.FROM,
+			// 	fromName: CONFIG.FROM_NAME,
+			// 	to: CONFIG.TO,
+			// 	subject: 'Buffalo Ruggby Club Member Account Addition',
+			// 	body_text: '',
+			// 	body_html: '<h3>' + email_msg + '</h3>',
+			// }
 
-			const msg =
-				'An account for account ' +
-				member_firstname +
-				' ' +
-				member_lastname +
-				'  has been created ' +
-				' email = ' +
-				lc_account_email
-
-			const email_data = {
-				from: CONFIG.FROM,
-				fromName: CONFIG.FROM_NAME,
-				to: 'ron.astridge@me.com',
-				subject: 'Buffalo Ruggby Club Member Account Modification',
-				body_text: '',
-				body_html: '<h3>' + msg + '</h3>',
-			}
-
-			// sendEmail(emaildata)
+			// // the problem - causes CONN undefined
+			// await sendEmail(email_data)
+ */
 		} else {
-			const msg =
+			error_msg =
 				'An account with email ' + lc_account_email + ' already exists'
-
-			account = { message: msg }
-			console.log('EXISTS ', msg)
-
-			const email_data = {
-				from: CONFIG.FROM,
-				fromName: CONFIG.FROM_NAME,
-				to: 'ron.astridge@me.com',
-				subject: 'Buffalo Rugby Club Member Account Modification',
-				body_text: '',
-				body_html: '<h3>' + msg + '</h3>',
-			}
-			// sendEmail(emaildata)
+			console.log('EXISTS ', error_msg)
 		}
 
 		await CONN.query('COMMIT')
 		await CONN.end()
-		console.log('accountsService addOne COMMIT')
-		return account
+		console.log('END TRANSACTION COMMIT')
+		return { message: error_msg }
+		// return { message: 'ok' }
 	} catch (e) {
 		await CONN.query('ROLLBACK')
 		await CONN.end()
-		console.log('accountsService addOne ROLLBACK')
+		console.log('END TRANSACTION ROLLBACK')
+		return e
 	}
 }
 
@@ -220,18 +220,10 @@ async function addOne(info) {
 async function editOne(info) {
 	try {
 		const CONN = await getConnection()
-		/* 		const CONFIG = useRuntimeConfig()
-
-		const CONN = await mysql.createPool({
-			host: CONFIG.DB_HOST,
-			user: CONFIG.DB_USER,
-			password: CONFIG.DB_PASSWORD,
-			database: CONFIG.DB_DATABASE,
-		}) */
 		await CONN.query('START TRANSACTION')
 		console.log('START TRANSACTION')
 
-		// check for  updated email in others
+		// check for existing email in others
 		let sql = `select *
 							from inbrc_accounts
 							where deleted = 0  AND account_id <> ${info.account_id}`
@@ -240,6 +232,9 @@ async function editOne(info) {
 		const lc_account_email = info.account_email.toLowerCase()
 		let account = accounts.find((u) => u.account_email === lc_account_email)
 
+		let error_msg = null
+		// If no email conflict
+		//
 		if (!account) {
 			let sql = `UPDATE inbrc_accounts
 							SET
@@ -325,42 +320,54 @@ async function editOne(info) {
 			)
 
 			sql = mysql.format(sql, inserts)
+			await CONN.execute(sql)
 
+			/* 			
 			const [rows, fields] = await CONN.execute(sql)
 			account = rows
 
-			const msg =
-				'An account for account ' +
-				member_firstname +
-				' ' +
-				member_lastname +
-				'  has been updated ' +
-				' email = ' +
-				lc_account_email
+			//unneeded?
+			// const [rows, fields] = await CONN.execute(sql)
+			// account = rows
+			// const id = account.insertId
 
+			// //
+			// // for email when it I get it working
+			// //
+			// const email_msg =
+			// 	'An account for account ' +
+			// 	member_firstname +
+			// 	' ' +
+			// 	member_lastname +
+			// 	'  has been updated ' +
+			// 	' email = ' +
+			// 	lc_account_email
 			// const email_data = {
 			// 	from: CONFIG.FROM,
 			// 	fromName: CONFIG.FROM_NAME,
-			// 	to: 'ron.astridge@me.com',
-			// 	subject: 'Buffalo Rugby Club Member Account Modification',
+			// 	to: CONFIG.TO,
+			// 	subject: 'Buffalo Ruggby Club Member Account Addition',
 			// 	body_text: '',
-			// 	body_html: '<h3>' + msg + '</h3>',
+			// 	body_html: '<h3>' + email_msg + '</h3>',
 			// }
-			// sendEmail(email_data)
+
+			// // the problem - causes CONN undefined
+			// await sendEmail(email_data)
+			 */
 		} else {
-			const msg =
+			error_msg =
 				'An account with email ' + lc_account_email + ' already exists'
-			account = { message: msg }
+			console.log('EXISTS ', error_msg)
 		}
 
 		await CONN.query('COMMIT')
 		await CONN.end()
-		console.log(' END TRANSACTION accountsService editOne COMMIT')
-		return account
+		console.log('END TRANSACTION COMMIT')
+		return { message: error_msg }
 	} catch (e) {
 		await CONN.query('ROLLBACK')
 		await CONN.end()
-		console.log('END TRANSACTION accountsService addOne ROLLBACK')
+		console.log('END TRANSACTION ROLLBACK')
 		return e
 	}
 }
