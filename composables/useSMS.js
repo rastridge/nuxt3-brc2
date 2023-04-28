@@ -1,7 +1,7 @@
 import { useAuthStore } from '~/stores/authStore'
+const auth = useAuthStore()
 
 export const useAddSMS = async (state, send) => {
-	const auth = useAuthStore()
 	const { data, pending, error } = await useFetch('/sms/addone', {
 		method: 'post',
 		body: state,

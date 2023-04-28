@@ -193,12 +193,19 @@ async function sendSMS({ sms_id, sms_body_text, sms_recipient_type_id }) {
 	const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 	sms_recipients.forEach(function (recipient) {
-		const msg = client.messages.create({
-			from: TWILIO_NUMBER,
-			to: recipient.account_addr_phone,
-			body: sms_body_text,
-			// statusCallback: `/sms/MessageStatus`,
-		})
+		const msg = client.messages
+			.create({
+				from: TWILIO_NUMBER,
+				to: recipient.account_addr_phone,
+				body: sms_body_text,
+				// statusCallback: `/sms/MessageStatus`,
+			})
+			.then(function (res) {
+				console.log(res.body)
+			})
+			.catch(function (err) {
+				console.log(err)
+			})
 	})
 
 	const sql2 = `UPDATE inbrc_sms
