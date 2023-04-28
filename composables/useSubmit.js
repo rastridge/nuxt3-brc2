@@ -1,3 +1,7 @@
+//
+// used in all except Newsletters an SMS
+// they must handle Send Now Send Later
+//
 import { useAuthStore } from '~/stores/authStore'
 import { useAlertStore } from '~/stores/alertStore'
 const alert = useAlertStore()
@@ -32,6 +36,7 @@ export default function useSubmit() {
 				authorization: auth.user.token,
 			},
 		})
+
 		alert.clear()
 		if (error.value) {
 			throw createError({
@@ -39,6 +44,7 @@ export default function useSubmit() {
 				statusMessage: `Error submitting data to /${app}/addone`,
 			})
 		} else {
+			// used to report duplicate email exists
 			if (data.value.message) {
 				alert.error(data.value.message)
 			}

@@ -21,17 +21,16 @@
 			if (result.isConfirmed) {
 				addNewsletter(state, 'sendNow')
 				Swal.fire('Saved and Sent', '', 'success')
+				navigateTo('/admin/newsletters')
 			} else if (result.isDenied) {
 				addNewsletter(state, 'sendLater')
 				Swal.fire('Saved', '', 'success')
+				navigateTo('/admin/newsletters')
 			} else if (result.isDismissed) {
-				// this.submitStatus = ''
+				navigateTo('/admin/newsletters')
 			}
 		})
 	}
-
-	// const { onSendSave } = useSendSave()
-	// onSendSave(state.value, useAddNewsletter())
 </script>
 
 <template>
