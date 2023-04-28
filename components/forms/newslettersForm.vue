@@ -6,8 +6,8 @@
 		<FormKit
 			type="form"
 			v-model="state"
-			submit-label="Submit"
-			@submit="submitForm(state)"
+			submit-label="Submit Newsletter"
+			@submit="submitForm"
 		>
 			<FormKit
 				type="select"

@@ -5,19 +5,19 @@
 		</p>
 		<FormKit
 			type="form"
+			#default="{ state }"
 			v-model="state"
 			submit-label="Submit"
-			@submit="submitForm(state)"
+			@submit="submitForm"
 		>
 			<FormKit
 				type="select"
 				label="Recipient Group"
-				placeholder="Select Recipient Group"
 				name="sms_recipient_type_id"
+				placeholder="Select Recipient Group"
 				:options="newsletterRecipientTypeOptions"
 				validation="required"
 			/>
-
 			<FormKit
 				label="SMS subject"
 				name="sms_subject"
@@ -31,7 +31,7 @@
 				validation="required"
 			/>
 		</FormKit>
-		<Button class="m-1" @click.prevent="cancelForm()"> Cancel </Button>
+		<Button class="m-1" @click="cancelForm()"> Cancel </Button>
 	</div>
 </template>
 

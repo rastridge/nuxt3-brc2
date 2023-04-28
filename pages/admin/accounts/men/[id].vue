@@ -12,9 +12,7 @@
 	//
 	const onSubmit = async function (form_state) {
 		await onSubmitEdit('accounts', form_state)
-		if (alert.message === null) {
-			navigateTo(`/admin/accounts/men`)
-		}
+		navigateTo(`/admin/accounts/men`)
 	}
 </script>
 

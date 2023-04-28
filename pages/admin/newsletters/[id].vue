@@ -2,7 +2,7 @@
 	import Swal from 'sweetalert2'
 	import { useAlertStore } from '~/stores/alertStore'
 	const alert = useAlertStore()
-
+	const { editNewsletter } = useNewsletter()
 	definePageMeta({ layout: 'admin' })
 
 	//
@@ -23,13 +23,15 @@
 			denyButtonText: `Send later`,
 		}).then((result) => {
 			if (result.isConfirmed) {
-				useEditNewsletter(state, 'sendNow')
+				editNewsletter(state, 'sendNow')
 				Swal.fire('Saved and Sent', '', 'success')
+				navigateTo('/admin/newsletters')
 			} else if (result.isDenied) {
-				useEditNewsletter(state, 'sendLater')
+				editNewsletter(state, 'sendLater')
 				Swal.fire('Saved', '', 'success')
+				navigateTo('/admin/newsletters')
 			} else if (result.isDismissed) {
-				// this.submitStatus = ''
+				navigateTo('/admin/newsletters')
 			}
 		})
 	}

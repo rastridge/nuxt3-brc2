@@ -1,43 +1,70 @@
 import { useAuthStore } from '~/stores/authStore'
+const auth = useAuthStore()
 
-export const useAddNewsletter = async (state, send) => {
-	const auth = useAuthStore()
-	const { data, pending, error } = await useFetch('/newsletters/addone', {
-		method: 'post',
-		body: state,
-		headers: {
-			authorization: auth.user.token,
-		},
-	})
-	state.newsletter_id = data.value.insertId
-	if (send === 'sendNow') {
-		const { data, pending, error } = await useFetch('/newsletters/send', {
+export default function useNewsletter() {
+	const addNewsletter = async (state, send) => {
+		const { data, pending, error } = await useFetch('/newsletters/addone', {
 			method: 'post',
 			body: state,
 			headers: {
 				authorization: auth.user.token,
 			},
 		})
-	}
-	navigateTo('/admin/newsletters')
-}
+		if (error.value) {
+			throw createError({
+				...error.value,
+				statusMessage: `Error submitting data to  /newsletters/addone`,
+			})
+		}
 
-export const useEditNewsletter = async (state, send) => {
-	const { data, pending, error } = await useFetch('/newsletters/editone', {
-		method: 'post',
-		body: state,
-		headers: {
-			authorization: auth.user.token,
-		},
-	})
-	if (send === 'sendNow') {
-		const { data, pending, error } = await useFetch('/newsletters/send', {
+		state.newsletter_id = data.value.insertId
+		if (send === 'sendNow') {
+			const { data, pending, error } = await useFetch('/newsletters/send', {
+				method: 'post',
+				body: state,
+				headers: {
+					authorization: auth.user.token,
+				},
+			})
+			if (error.value) {
+				throw createError({
+					...error.value,
+					statusMessage: `Error submitting data to  /newsletters/send`,
+				})
+			}
+		}
+	}
+
+	const editNewsletter = async (state, send) => {
+		const { data, pending, error } = await useFetch('/newsletters/editone', {
 			method: 'post',
 			body: state,
 			headers: {
 				authorization: auth.user.token,
 			},
 		})
+		if (error.value) {
+			throw createError({
+				...error.value,
+				statusMessage: `Error submitting data to  /newsletters/editone`,
+			})
+		}
+
+		if (send === 'sendNow') {
+			const { data, pending, error } = await useFetch('/newsletters/send', {
+				method: 'post',
+				body: state,
+				headers: {
+					authorization: auth.user.token,
+				},
+			})
+			if (error.value) {
+				throw createError({
+					...error.value,
+					statusMessage: `Error submitting data to /newsletters/send`,
+				})
+			}
+		}
 	}
-	navigateTo('/admin/newsletters')
+	return { addNewsletter, editNewsletter }
 }

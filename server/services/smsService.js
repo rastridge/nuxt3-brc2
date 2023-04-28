@@ -1,36 +1,9 @@
-import mysql from 'mysql2/promise'
-import twilio from 'twilio'
-const {
-	DB_DATABASE,
-	DB_PASSWORD,
-	DB_USER,
-	DB_HOST,
-	TWILIO_NUMBER,
-	TWILIO_ACCOUNT_SID,
-	TWILIO_AUTH_TOKEN,
-} = useRuntimeConfig()
 const { doDBQuery } = useQuery()
-/* 
-async function doDBQuery(sql, inserts) {
-	const CONN = await mysql.createPool({
-		host: DB_HOST,
-		user: DB_USER,
-		password: DB_PASSWORD,
-		database: DB_DATABASE,
-	})
-	if (inserts) {
-		sql = mysql.format(sql, inserts)
-	}
-	// console.log('doDBQuery sql = ', sql)
-	const [rows, fields] = await CONN.execute(sql)
-	await CONN.end()
-	return rows
-}
- */
+const { sendOneSMS } = useSMS()
+
 export const smsService = {
 	getAll,
 	sendSMS,
-	trackNewsletter,
 	getOne,
 	addOne,
 	editOne,
@@ -102,9 +75,6 @@ async function sendSMS({ sms_id, sms_body_text, sms_recipient_type_id }) {
 					WHERE deleted = 0
 					ORDER BY account_email ASC`
 	const accounts = await doDBQuery(sql)
-	//
-	//
-
 	//
 	// make recipients list
 	//
@@ -190,22 +160,8 @@ async function sendSMS({ sms_id, sms_body_text, sms_recipient_type_id }) {
 	const sms_recipients = setSMSRecipients(accounts, sms_recipient_type_id)
 	const rec_cnt = sms_recipients.length
 
-	const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-
 	sms_recipients.forEach(function (recipient) {
-		const msg = client.messages
-			.create({
-				from: TWILIO_NUMBER,
-				to: recipient.account_addr_phone,
-				body: sms_body_text,
-				// statusCallback: `/sms/MessageStatus`,
-			})
-			.then(function (res) {
-				console.log(res.body)
-			})
-			.catch(function (err) {
-				console.log(err)
-			})
+		sendOneSMS(recipient, sms_body_text)
 	})
 
 	const sql2 = `UPDATE inbrc_sms
@@ -226,16 +182,6 @@ async function getOne(id) {
 	const sql = `select * from inbrc_sms where sms_id = ` + id
 	const result = await doDBQuery(sql)
 	return result[0]
-}
-
-async function trackNewsletter(query) {
-	const conn = await mysql.createPool({
-		host: DB_HOST,
-		user: DB_USER,
-		password: DB_PASSWORD,
-		database: DB_DATABASE,
-	})
-	console.log('IN trackNewsletter query = ', query)
 }
 
 async function addOne({
